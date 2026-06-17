@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Pomodoro</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{--bg:#fff;--paper:#fff;--ink:#000;--bord:#000;--orange:#c62828;--orange-d:#9a1f1f;
+    --blue:#0e3168;--green:#15673a;--red:#a81818;--gray:#3a3630;--minus:#8a8275;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:18px;line-height:1.35;font-weight:600}
+  header{background:var(--ink);color:#fff;padding:10px 12px 0;position:sticky;top:0;z-index:20}
+  header h1{margin:0;font-size:17px;font-weight:900}
+  .tabs{display:flex;gap:5px;margin-top:8px}
+  .tabs button{flex:1;background:#2b2b2b;color:#bdb6a8;border:none;border-radius:9px 9px 0 0;padding:11px 6px;font-weight:900;font-size:14px}
+  .tabs button.on{background:var(--orange);color:#fff}
+  .wrap{max-width:720px;margin:0 auto;padding:14px 12px}
+  .page{display:none}.page.on{display:block}
+  .box{background:var(--paper);border:3px solid var(--bord);border-radius:10px;padding:14px;margin-bottom:16px}
+  .box h2{margin:0 0 12px;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;background:var(--ink);color:#fff;display:inline-block;padding:6px 14px;border-radius:6px}
+  label{display:block;font-size:13px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.3px;margin:0 0 4px}
+  input{width:100%;font-size:22px;font-weight:800;padding:12px;border:2.5px solid var(--bord);border-radius:8px;background:#fff;color:var(--ink);text-align:center;-moz-appearance:textfield}
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  input:focus{outline:none;border-color:var(--orange)}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .f{margin-bottom:10px}
+  .conv{display:flex;gap:6px}.conv button{flex:0 0 78px;border:2.5px solid var(--bord);border-radius:8px;background:var(--blue);color:#fff;font-weight:900;font-size:13px}
+  .toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+  .toggle button{padding:12px;border:2.5px solid var(--bord);border-radius:9px;background:#efece4;color:var(--ink);font-weight:900;font-size:14px}
+  .toggle button.on{background:var(--orange);color:#fff}
+  .res{display:flex;justify-content:space-between;align-items:center;border-top:2px dashed #bbb;padding:10px 0}
+  .res:first-of-type{border-top:none}
+  .res .k{font-size:14px;font-weight:800;color:var(--gray);text-transform:uppercase;flex:1;padding-right:10px}
+  .res .v{font-size:23px;font-weight:900;color:var(--ink);white-space:nowrap}
+  .res.hi .v{font-size:29px;color:var(--orange-d)}.res.blue .v{color:var(--blue)}.res.green .v{color:var(--green)}
+  .detr{border-color:var(--red)!important}.detr h2{background:var(--red)}.detr .res .v{color:var(--red)}
+  .coefrow{display:flex;flex-direction:column;gap:8px}
+  .ci{display:flex;align-items:center;justify-content:space-between;gap:10px;border:2.5px solid var(--bord);border-radius:10px;padding:9px 12px;background:#fff}
+  .ci .lab{font-size:15px;font-weight:900;color:var(--orange-d)}
+  .ci .cin{display:flex;align-items:center;gap:5px;flex:0 0 auto}
+  .ci .cin input{width:68px;font-size:19px;padding:9px 4px;text-align:center}
+  .ci .cin .pc{font-size:16px;font-weight:800;color:var(--gray)}
+  .lettura{border:3px solid var(--bord);border-radius:12px;padding:12px;margin-bottom:16px;background:#fff}
+  .lhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .lhead .t{font-size:15px;font-weight:900;background:var(--blue);color:#fff;padding:5px 12px;border-radius:6px}
+  .lhead .rm{background:var(--red);color:#fff;border:none;border-radius:8px;font-weight:900;font-size:13px;padding:8px 12px}
+  .band{display:flex;flex-direction:column;gap:8px;border:2.5px solid var(--bord);border-radius:10px;padding:9px;margin-bottom:8px;background:#fff}
+  .band .nm{font-size:16px;font-weight:900;line-height:1.1;display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+  .band .nm b{color:var(--orange-d)}
+  .band .nm .cfb{display:inline-block;font-size:13px;font-weight:900;color:#fff;background:var(--orange-d);border-radius:6px;padding:2px 8px;margin-left:6px}
+  .band .ct{display:flex;align-items:stretch;gap:8px}
+  .band .ct .minus{flex:0 0 64px;min-height:54px;border:2.5px solid var(--bord);border-radius:9px;font-size:26px;font-weight:900;color:#fff;background:var(--minus)}
+  .band .ct input.val{flex:0 0 84px;width:84px;min-height:54px;font-size:28px;font-weight:900;border:2.5px solid var(--bord);border-radius:9px;background:#fff4e8;text-align:center;padding:0}
+  .band .ct .plus{flex:1;min-height:54px;border:2.5px solid var(--bord);border-radius:9px;font-size:38px;font-weight:900;color:#fff;background:var(--green)}
+  .lout{display:flex;justify-content:space-between;align-items:center;background:#f0ede6;border:2px solid var(--bord);border-radius:8px;padding:8px 12px;margin-top:6px;flex-wrap:wrap;gap:4px}
+  .lout .k{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase}
+  .lout .v{font-size:16px;font-weight:900;color:var(--orange-d)}
+  .qadd{width:100%;padding:14px;border:3px dashed var(--green);border-radius:12px;background:#eaf6ee;color:var(--green);font-weight:900;font-size:16px;margin-bottom:16px}
+  .qtot{background:var(--ink);border-color:var(--ink)}.qtot h2{background:var(--green);color:#fff}
+  .qtot .res{border-color:#444}.qtot .res .k{color:#cfc6b4}.qtot .res .v{color:#fff}
+  .qtot .res.big .v{font-size:27px;color:#a9e0bd}
+  .final{background:var(--ink);border-color:var(--ink)}.final h2{background:var(--orange);color:#fff}
+  .final .res{border-color:#444}.final .res .k{color:#cfc6b4}.final .res .v{color:#fff}
+  .final .res.tot .v{font-size:36px;color:#ffb0a0}
+  .fromq{font-size:12px;color:var(--blue);font-weight:800;text-transform:uppercase;margin:-4px 0 8px}
+  .foot{background:#fff;border-top:3px solid var(--bord);padding:12px;display:flex;gap:10px;max-width:720px;margin:0 auto 16px}
+  .foot button{flex:1;padding:14px;border:2.5px solid var(--bord);border-radius:10px;font-weight:900;font-size:16px}
+  .exp{background:var(--orange);color:#fff}.rst{background:#efece4;color:var(--ink);flex:0 0 90px}
+  .note{font-size:12px;color:var(--gray);font-weight:700;margin-top:8px}
+  .lgrow{border:2.5px solid var(--bord);border-radius:10px;margin-bottom:9px;overflow:hidden}
+  .lgrow .top{display:flex;align-items:center;justify-content:space-between;background:#f0ede6;padding:7px 12px}
+  .lgrow .top .cl{font-size:16px;font-weight:900}.lgrow .top .pc{font-size:18px;font-weight:900;color:var(--orange-d)}
+  .lgrow .desc{padding:9px 12px;font-size:14px;font-weight:600;line-height:1.35}
+  .lgnote{background:#fff;border:2.5px dashed var(--bord);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700;margin-top:8px}
+
+  /* --- archivio / luogo --- */
+  .actrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .actrow button{padding:13px;border:2.5px solid var(--bord);border-radius:9px;font-weight:900;font-size:15px}
+  .actrow .sv{background:var(--orange);color:#fff;border-color:var(--orange-d)}
+  .actrow .nw{background:#efece4;color:var(--ink)}
+  .gps{width:100%;margin-top:8px;padding:13px;border:2.5px solid var(--orange-d);border-radius:9px;background:var(--orange);color:#fff;font-weight:900;font-size:16px}
+  .arow{border:2.5px solid var(--bord);border-radius:10px;padding:11px 12px;background:#fff;margin-bottom:10px}
+  .arow.cur{border-color:var(--orange-d);background:#fdeaea}
+  .arow .atop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .arow .anome{font-size:17px;font-weight:900;color:var(--ink)}
+  .arow .acur{font-size:11px;font-weight:900;color:#fff;background:var(--orange-d);border-radius:6px;padding:3px 8px;white-space:nowrap}
+  .arow .ameta{font-size:13px;color:var(--gray);margin-top:4px;font-weight:700}
+  .arow .adate{display:flex;align-items:center;gap:8px;margin-top:8px}
+  .arow .adate label{font-size:12px;font-weight:800;color:var(--gray);text-transform:uppercase}
+  .arow .adate input{flex:1;font-size:15px;font-weight:800;padding:8px;border:2px solid var(--bord);border-radius:7px;text-align:center}
+  .arow .abtn{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:9px}
+  .arow .abtn button{padding:10px 4px;border:2px solid var(--bord);border-radius:7px;font-weight:900;font-size:13px}
+  .arow .abtn .open{background:var(--orange);color:#fff;border-color:var(--orange-d)}
+  .arow .abtn .ren{background:#efece4;color:var(--ink)}
+  .arow .abtn .del{background:#fff;color:var(--red);border-color:var(--red)}
+  .arow .maps{display:block;margin-top:9px;text-align:center;padding:11px;border:2px solid var(--orange-d);border-radius:8px;background:var(--orange);color:#fff;font-weight:900;font-size:14px;text-decoration:none}
+  .mapsbtn{width:100%;margin-top:8px;padding:12px;border:2.5px solid var(--orange-d);border-radius:9px;background:#fff;color:var(--orange-d);font-weight:900;font-size:15px}
+  .owner{text-align:center;font-size:11px;color:#9a948a;padding:14px 12px 28px;font-weight:800;letter-spacing:.4px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🍅 POMODORO CONCENTRATO — campo</h1>
+  <div class="tabs">
+    <button id="tb1" class="on" onclick="tab(1)">PERIZIA</button>
+    <button id="tb2" onclick="tab(2)">RILIEVI</button>
+    <button id="tb3" onclick="tab(3)">TABELLA</button>
+    <button id="tb4" onclick="tab(4)">ARCHIVIO</button>
+  </div>
+</header>
+
+<!-- PERIZIA -->
+<div class="wrap page on" id="p1">
+  <div class="actrow">
+    <button class="sv" onclick="salvaPerizia()">💾 Salva perizia</button>
+    <button class="nw" onclick="nuovaPerizia()">+ Nuova</button>
+  </div>
+  <div class="box">
+    <h2>Luogo perizia</h2>
+    <div class="toggle">
+      <button id="loc_coord" class="on" onclick="setLocType('coord')">Coordinate</button>
+      <button id="loc_fm" onclick="setLocType('fm')">Dati</button>
+    </div>
+    <div id="loc_coord_box" style="margin-top:8px">
+      <div class="g2">
+        <div class="f"><label>Latitudine</label><input id="loc_lat" type="number" inputmode="decimal" oninput="recompute()" placeholder="es. 45.5412"></div>
+        <div class="f"><label>Longitudine</label><input id="loc_lon" type="number" inputmode="decimal" oninput="recompute()" placeholder="es. 10.2167"></div>
+      </div>
+      <button class="gps" onclick="getGPS()">📍 Prendi posizione</button>
+      <button class="mapsbtn" onclick="openMapsForm()">🗺️ Apri su Google Maps</button>
+      <div class="note" id="loc_gps_msg" style="margin-top:6px">Acquisisce le coordinate dal GPS (4 decimali). Richiede GPS attivo e permesso posizione.</div>
+    </div>
+    <div id="loc_fm_box" style="display:none;margin-top:8px">
+      <div class="f"><label>Numero certificato</label><input id="dat_cert" type="text" oninput="recompute()" placeholder="es. 7313/2026" style="text-align:left"></div>
+      <div class="f"><label>Data perizia</label><input id="dat_data" type="date" oninput="recompute()"></div>
+      <div class="f"><label>Nome assicurato</label><input id="dat_assic" type="text" oninput="recompute()" placeholder="es. Rossi Mario" style="text-align:left"></div>
+      <div class="f"><label>Partita</label><input id="dat_part" type="text" oninput="recompute()" placeholder="es. 123/A" style="text-align:left"></div>
+      <div class="f"><label>Luogo / Foglio Mappale</label><input id="loc_foglio" type="text" oninput="recompute()" placeholder="paese, oppure Fg. 12 Mapp. 345" style="text-align:left"></div>
+      <div class="f"><label>Periti</label><input id="dat_periti" type="text" oninput="recompute()" placeholder="nome dei periti" style="text-align:left"></div>
+    </div>
+  </div>
+  <div class="box">
+    <h2>1 · Sesto e piante</h2>
+    <div class="f"><label>Superficie (m²)</label>
+      <div class="conv"><input id="sup" type="number" inputmode="decimal" oninput="recompute()"><button onclick="haToMq()">da ha</button></div>
+    </div>
+    <div class="toggle">
+      <button id="md_s" class="on" onclick="setMode('s')">Fila singola</button>
+      <button id="md_b" onclick="setMode('b')">Fila binata</button>
+    </div>
+    <div class="g2">
+      <div class="f"><label id="lx">Interfila (x) m</label><input id="x" type="number" inputmode="decimal" oninput="recompute()"></div>
+      <div class="f"><label>Dist. piante (y) m</label><input id="y" type="number" inputmode="decimal" oninput="recompute()"></div>
+    </div>
+    <div class="f"><label>Fallanze (k) %</label><input id="k" type="number" inputmode="decimal" value="0" oninput="recompute()"></div>
+    <div class="note" id="sestonote">Singola: piante = (sup×10000)/(x·y)×(100−k)/100.</div>
+    <div class="res hi"><span class="k">Piante partita (i)</span><span class="v" id="r_a">—</span></div>
+    <div class="res blue"><span class="k">Piante / ha</span><span class="v" id="r_aha">—</span></div>
+  </div>
+
+  <div class="box">
+    <h2>2 · Potenziale</h2>
+    <div class="g2">
+      <div class="f"><label>Bacche/pianta potenz.</label><input id="bpot" type="number" inputmode="decimal" oninput="recompute()"></div>
+      <div class="f"><label>Peso medio bacca kg</label><input id="peso" type="number" inputmode="decimal" oninput="recompute()"></div>
+    </div>
+    <div class="res"><span class="k">kg/pianta potenziale</span><span class="v" id="r_kgpot">—</span></div>
+    <div class="res blue"><span class="k">Prod. potenziale</span><span class="v" id="r_pot">—</span></div>
+    <div class="res blue"><span class="k">Prod. potenziale / ha</span><span class="v" id="r_potha">—</span></div>
+  </div>
+
+  <div class="box">
+    <h2>3 · Quantità presente</h2>
+    <div class="fromq">↳ dalle bacche presenti rilevate</div>
+    <div class="res"><span class="k">Bacche presenti / pianta</span><span class="v" id="r_bott">—</span></div>
+    <div class="res"><span class="k">kg/pianta (peso medio pianta)</span><span class="v" id="r_kgott">—</span></div><div class="res"><span class="k">Peso medio bacca (misurato)</span><span class="v" id="r_pmb">—</span></div>
+    <div class="res green"><span class="k">Ottenibile (partita)</span><span class="v" id="r_ott">—</span></div>
+    <div class="res green"><span class="k">Ottenibile / ha</span><span class="v" id="r_ottha">—</span></div>
+  </div>
+
+  <div class="box">
+    <h2>4 · Liquidazione quantità</h2>
+    <div class="toggle" style="margin-bottom:8px">
+      <button id="uA_part" onclick="setUnitA('part')">Dato a partita</button>
+      <button id="uA_ha" class="on" onclick="setUnitA('ha')">Dato a q.li/ha</button>
+    </div>
+    <div class="g2">
+      <div class="f"><label id="lbA">Assicurata (q.li/ha)</label><input id="assic" type="number" inputmode="decimal" oninput="recompute()"></div>
+      <div class="f"><label id="lbD">Detrazione (q.li/ha)</label><input id="detr" type="number" inputmode="decimal" oninput="recompute()" placeholder="0"></div>
+    </div>
+    <div class="note">Scegli se inserire i dati <b>a partita</b> o <b>a q.li/ha</b>. R = assicurata − detrazione. Detrazione = quota che giudichi NON in garanzia. Se A vuota uso la potenziale. Con dati a partita serve la superficie.</div>
+    <div class="res blue"><span class="k">Assicurata (A)</span><span class="v" id="r_Aboth" style="font-size:15px;white-space:normal;text-align:right">—</span></div>
+    <div class="res"><span class="k">Detrazione</span><span class="v" id="r_Dboth" style="font-size:15px;white-space:normal;text-align:right">—</span></div>
+    <div class="res green"><span class="k">Risarcibile R / ha</span><span class="v" id="r_Rha">—</span></div>
+    <div class="res"><span class="k">Risarcibile R (partita)</span><span class="v" id="r_R">—</span></div>
+    <div class="res"><span class="k">Asportato / ha</span><span class="v" id="r_aspha">—</span></div>
+    <div class="res"><span class="k">Asportato (partita)</span><span class="v" id="r_asp">—</span></div>
+    <div class="res hi"><span class="k">DANNO QUANTITÀ</span><span class="v" id="r_dq">—</span></div>
+  </div>
+
+  <div class="box detr" id="detr_box" style="display:none">
+    <h2>Dettaglio detrazione</h2>
+    <div class="res"><span class="k">% detrazione su base</span><span class="v" id="detr_pct">—</span></div>
+    <div class="res"><span class="k">Q.li/ha in meno</span><span class="v" id="detr_ha">—</span></div>
+    <div class="res"><span class="k">Q.li totali in meno</span><span class="v" id="detr_tot">—</span></div>
+  </div>
+
+  <div class="box">
+    <h2>5 · Qualità</h2>
+    <div class="fromq">↳ media dei danni dei campioni, residuata</div>
+    <div class="res"><span class="k">Campioni eseguiti</span><span class="v" id="r_nlett">0</span></div>
+    <div class="res"><span class="k">Danno medio qualità</span><span class="v" id="r_dmq">—</span></div>
+    <div class="res hi"><span class="k">DANNO QUALITÀ (residuato)</span><span class="v" id="r_dqu">—</span></div>
+  </div>
+
+  <div class="box final">
+    <h2>6 · Risultato</h2>
+    <div class="res"><span class="k">Danno quantità</span><span class="v" id="r_dq2">—</span></div>
+    <div class="res"><span class="k">Danno qualità (residuato)</span><span class="v" id="r_dqu2">—</span></div>
+    <div class="res tot"><span class="k">Danno totale</span><span class="v" id="r_tot">—</span></div>
+  </div>
+  <div class="note" style="text-align:center;padding:0 6px 8px">Percentuali al lordo di franchigia. Verificare soglia/franchigia di contratto.</div>
+</div>
+
+<!-- RILIEVI -->
+<div class="wrap page" id="p2">
+  <div class="box">
+    <h2>Coefficienti — Concentrato</h2>
+    <div class="coefrow" id="coefrow"></div>
+    <div class="note">Tab. A liquidativa Pomodoro, colonna Concentrato/Pomodorino. Modificabili.</div>
+  </div>
+  <div id="letture"></div>
+  <button class="qadd" onclick="addLettura()">＋ AGGIUNGI CAMPIONE</button>
+  <div class="box qtot">
+    <h2>Totali rilievi</h2>
+    <div class="res"><span class="k">Campioni</span><span class="v" id="q_n">0</span></div>
+    <div class="res"><span class="k">Bacche presenti tot.</span><span class="v" id="q_pres">0</span></div>
+    <div class="res"><span class="k">Bacche presenti / pianta</span><span class="v" id="q_bott">—</span></div>
+    <div class="res big"><span class="k">Danno medio qualità</span><span class="v" id="q_dmq">—</span></div>
+    <div class="note" style="color:#cfc6b4">Entra da solo nella PERIZIA (quantità presente + qualità).</div>
+  </div>
+</div>
+
+<!-- TABELLA -->
+<div class="wrap page" id="p3">
+  <div class="box">
+    <h2>Tab. A — Pomodoro Concentrato</h2>
+    <div class="note" style="margin:-4px 0 10px">Tabella liquidativa Pomodoro, colonna Concentrato e Pomodorino — tutte le avversità. Active Raccolto, ed. 20.02.2026 (Art. 21.4).</div>
+    <div id="legend"></div>
+    <div class="lgnote"><b>Solo danno di quantità:</b> le bacche perse, distrutte o che presentano fenomeni di marcescenza evidente, raggrinzimento, depigmentazione della bacca per una superficie superiore a 2/3 dovuti agli eventi atmosferici assicurati, tali da azzerare il loro valore intrinseco e comunque che non possono essere destinate alla trasformazione industriale, vengono valutati solo agli effetti del danno di quantità.</div>
+  </div>
+</div>
+
+<div class="wrap page" id="p4">
+  <div class="box">
+    <h2>Perizie salvate</h2>
+    <div class="note">Premi "Salva perizia" nella pagina PERIZIA per archiviare quella in corso. Restano sul dispositivo, offline, finche non le elimini. Data e nome modificabili qui.</div>
+    <div id="archlist"></div>
+  </div>
+</div>
+
+<div class="foot">
+  <button class="rst" onclick="resetAll()">Azzera</button>
+  <button class="exp" onclick="exportTxt()">⬇ Salva .txt</button>
+</div>
+
+<div class="owner">Proprietà di Stefano Zanardini · cod. 7313</div>
+<script>
+const BANDS=[
+  {l:'a',nm:'Illese',cf:0, d:'Fiori e bacche illese; depigmentazione della bacca per una superficie inferiore 1/10'},
+  {l:'b',nm:'Lievi',cf:5, d:'Qualche ammaccatura; lesioni cicatrizzate all\u2019epicarpo, depigmentazione della bacca per una superficie compresa tra 1/10 e 1/4'},
+  {l:'c',nm:'Medie',cf:20, d:'Più ammaccature; lesioni non cicatrizzate all\u2019epicarpo; lesioni lievi al mesocarpo; deformazioni leggere, depigmentazione della bacca per una superficie compresa tra 1/4 e 2/3'},
+  {l:'d',nm:'Gravi',cf:55, d:'Lesioni medie al mesocarpo; deformazioni medie'},
+  {l:'e',nm:'Molto gravi',cf:70, d:'Lesioni profonde e gravi al mesocarpo'}
+];
+let MODE='s';
+let UNITA='ha';
+let coeffs=BANDS.map(b=>b.cf);
+let letture=[{pl:3,w:0,c:[0,0,0,0,0]}];
+const WORKKEY='pomodoro_work_v1', ARCHKEY='pomodoro_arch_v1';
+let LOCTYPE='coord', CURID=null;
+function getCalcState(){const inp={};document.querySelectorAll('input[id]').forEach(e=>inp[e.id]=e.value);
+  return {inp:inp,letture:letture,coeffs:coeffs,UNITA:UNITA,MODE:MODE,loctype:LOCTYPE};}
+function applyCalcState(st){
+  if(Array.isArray(st.coeffs))coeffs=st.coeffs.slice();
+  if(Array.isArray(st.letture)&&st.letture.length)letture=st.letture;
+  if(st.UNITA)UNITA=st.UNITA;
+  if(st.MODE)MODE=st.MODE;
+  if(st.loctype)LOCTYPE=st.loctype;
+  if(st.inp)Object.keys(st.inp).forEach(id=>{const e=document.getElementById(id);if(e&&st.inp[id]!=null)e.value=st.inp[id];});
+  renderCoeff();renderLetture();setLocType(LOCTYPE);setUnitA(UNITA);setMode(MODE);
+}
+function setLocType(t){LOCTYPE=t;
+  document.getElementById('loc_coord').classList.toggle('on',t==='coord');
+  document.getElementById('loc_fm').classList.toggle('on',t==='fm');
+  document.getElementById('loc_coord_box').style.display=(t==='coord')?'block':'none';
+  document.getElementById('loc_fm_box').style.display=(t==='fm')?'block':'none';
+  saveWork();
+}
+function getGPS(){const msg=document.getElementById('loc_gps_msg');
+  if(!('geolocation' in navigator)){msg.textContent='GPS non disponibile su questo dispositivo.';return;}
+  msg.textContent='Rilevamento posizione in corso...';
+  navigator.geolocation.getCurrentPosition(function(pos){
+    document.getElementById('loc_lat').value=pos.coords.latitude.toFixed(4);
+    document.getElementById('loc_lon').value=pos.coords.longitude.toFixed(4);
+    msg.textContent='Posizione acquisita ('+new Date().toLocaleTimeString('it-IT')+').';
+    recompute();
+  },function(err){msg.textContent='Posizione non ottenuta: '+(err.code===1?'permesso negato.':'riprova all\'aperto con GPS attivo.');},
+  {enableHighAccuracy:true,timeout:12000,maximumAge:0});
+}
+function locLabel(){
+  if(LOCTYPE==='fm'){const fg=(document.getElementById('loc_foglio').value||'').trim();return fg||'(luogo n.d.)';}
+  const la=(document.getElementById('loc_lat').value||'').trim(),lo=(document.getElementById('loc_lon').value||'').trim();
+  return (la&&lo)?(la+', '+lo):'(luogo n.d.)';
+}
+function geoLat(){return (document.getElementById('loc_lat').value||'').trim();}
+function geoLon(){return (document.getElementById('loc_lon').value||'').trim();}
+function openMapsForm(){const la=geoLat(),lo=geoLon();
+  if(la&&lo){window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(la+','+lo),'_blank');}
+  else{alert('Inserisci o acquisisci prima le coordinate.');}}
+function geoOf(e){if(e.lat&&e.lon)return e.lat+','+e.lon;
+  if(e.loctype==='coord'&&e.st&&e.st.inp&&e.st.inp.loc_lat&&e.st.inp.loc_lon)return e.st.inp.loc_lat+','+e.st.inp.loc_lon;
+  const m=(''+(e.loc||'')).match(/^(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)$/);return m?(m[1]+','+m[2]):'';}
+function saveWork(){try{localStorage.setItem(WORKKEY,JSON.stringify({st:getCalcState(),curid:CURID}));}catch(e){}}
+function loadWork(){try{const raw=localStorage.getItem(WORKKEY);if(!raw)return;
+  const o=JSON.parse(raw);if(typeof o.curid!=='undefined')CURID=o.curid;
+  if(o.st){if(Array.isArray(o.st.coeffs))coeffs=o.st.coeffs.slice();
+    if(Array.isArray(o.st.letture)&&o.st.letture.length)letture=o.st.letture;
+    if(o.st.UNITA)UNITA=o.st.UNITA;if(o.st.MODE)MODE=o.st.MODE;if(o.st.loctype)LOCTYPE=o.st.loctype;
+    if(o.st.inp)Object.keys(o.st.inp).forEach(id=>{const e=document.getElementById(id);if(e&&o.st.inp[id]!=null)e.value=o.st.inp[id];});
+  }
+}catch(e){}}
+function loadArch(){try{const r=localStorage.getItem(ARCHKEY);return r?JSON.parse(r):[];}catch(e){return[];}}
+function storeArch(a){try{localStorage.setItem(ARCHKEY,JSON.stringify(a));}catch(e){}}
+function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function itDate(iso){if(!iso)return '';const x=(''+iso).split('-');return x.length===3?(x[2]+'/'+x[1]+'/'+x[0]):iso;}
+function dannoTxt(){return (document.getElementById('r_tot').textContent||'').replace('—','');}
+function salvaPerizia(){
+  const a=loadArch();
+  if(CURID){const e=a.find(x=>x.id===CURID);
+    if(e){e.st=getCalcState();e.loc=locLabel();e.loctype=LOCTYPE;e.lat=geoLat();e.lon=geoLon();e.danno=dannoTxt();storeArch(a);renderArch();alert('Perizia aggiornata in archivio.');return;}}
+  const _assicNm=(document.getElementById('dat_assic').value||'').trim();
+  const _dperiz=(document.getElementById('dat_data').value||todayISO());
+  const dft=(_assicNm||'Perizia')+' - '+itDate(_dperiz);
+  const name=prompt('Nome perizia:',dft);if(name===null)return;
+  const id='t'+Date.now();
+  a.unshift({id:id,name:(name||dft),date:_dperiz,loc:locLabel(),loctype:LOCTYPE,lat:geoLat(),lon:geoLon(),danno:dannoTxt(),st:getCalcState()});
+  CURID=id;storeArch(a);saveWork();renderArch();alert('Perizia salvata in archivio.');
+}
+function nuovaPerizia(){if(!confirm('Iniziare una NUOVA perizia? I dati in corso non salvati in archivio andranno persi.'))return;
+  CURID=null;resetForm();saveWork();tab(1);}
+function aprePerizia(id){const a=loadArch();const e=a.find(x=>x.id===id);if(!e)return;
+  CURID=id;applyCalcState(e.st);saveWork();renderArch();tab(1);}
+function rinominaPerizia(id){const a=loadArch();const e=a.find(x=>x.id===id);if(!e)return;
+  const n=prompt('Nuovo nome:',e.name);if(n===null)return;e.name=(n||e.name);storeArch(a);renderArch();}
+function dataPerizia(id,v){const a=loadArch();const e=a.find(x=>x.id===id);if(!e)return;e.date=v;storeArch(a);renderArch();}
+function eliminaPerizia(id){if(!confirm('Eliminare questa perizia dall\'archivio?'))return;
+  let a=loadArch().filter(x=>x.id!==id);storeArch(a);if(CURID===id)CURID=null;saveWork();renderArch();}
+function esc(s){return (''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function renderArch(){const box=document.getElementById('archlist');if(!box)return;
+  const a=loadArch();box.innerHTML='';
+  if(!a.length){box.innerHTML='<div class="note">Nessuna perizia salvata. Compila la perizia e premi "Salva perizia".</div>';return;}
+  a.forEach(function(e){const d=document.createElement('div');d.className='arow'+(e.id===CURID?' cur':'');
+    d.innerHTML='<div class="atop"><span class="anome">'+esc(e.name||'')+'</span>'+(e.id===CURID?'<span class="acur">in uso</span>':'')+'</div>'+
+      '<div class="ameta">\u{1F4CD} '+esc(e.loc||'-')+(e.danno?(' \u00B7 danno tot. '+esc(e.danno)):'')+'</div>'+
+      (geoOf(e)?('<a class="maps" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(geoOf(e))+'" target="_blank" rel="noopener">\u{1F5FA}\uFE0F Apri su Google Maps</a>'):'')+
+      '<div class="adate"><label>Data</label><input type="date" value="'+esc(e.date||'')+'" onchange="dataPerizia(\''+e.id+'\',this.value)"></div>'+
+      '<div class="abtn"><button class="open" onclick="aprePerizia(\''+e.id+'\')">Apri</button>'+
+      '<button class="ren" onclick="rinominaPerizia(\''+e.id+'\')">Rinomina</button>'+
+      '<button class="del" onclick="eliminaPerizia(\''+e.id+'\')">Elimina</button></div>';
+    box.appendChild(d);});
+}
+
+function nv(id){const e=document.getElementById(id);if(!e)return 0;const v=parseFloat((e.value||'').toString().replace(',','.'));return isNaN(v)?0:v;}
+function f(v,d=2){return (isFinite(v)?v:0).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function setT(id,t){const e=document.getElementById(id);if(e)e.textContent=t;}
+function haToMq(){const v=prompt('Ettari:');const q=parseFloat((v||'').replace(',','.'));if(!isNaN(q)){document.getElementById('sup').value=Math.round(q*10000);recompute();}}
+function tab(n){for(let i=1;i<=4;i++){document.getElementById('p'+i).classList.toggle('on',i===n);document.getElementById('tb'+i).classList.toggle('on',i===n);}
+  document.querySelector('.foot').style.display=(n===1)?'flex':'none';window.scrollTo(0,0);}
+function setUnitA(u){UNITA=u;
+  document.getElementById('uA_part').classList.toggle('on',u==='part');
+  document.getElementById('uA_ha').classList.toggle('on',u==='ha');
+  setT('lbA',u==='part'?'Assicurata (q.li partita)':'Assicurata (q.li/ha)');
+  setT('lbD',u==='part'?'Detrazione (q.li partita)':'Detrazione (q.li/ha)');
+  recompute();
+}
+function setMode(m){MODE=m;document.getElementById('md_s').classList.toggle('on',m==='s');document.getElementById('md_b').classList.toggle('on',m==='b');
+  setT('lx',m==='s'?'Interfila (x) m':'Dist. centro bine (x) m');
+  setT('sestonote',m==='s'?'Singola: piante = (sup×10000)/(x·y)×(100−k)/100.':'Binata: piante = (sup×10000)/((x·y)/2)×(100−k)/100 (raddoppio bina).');
+  recompute();}
+
+function renderCoeff(){
+  const box=document.getElementById('coefrow');box.innerHTML='';
+  BANDS.forEach((b,i)=>{const d=document.createElement('div');d.className='ci';
+    d.innerHTML='<div class="lab">'+b.l+') '+b.nm+'</div><div class="cin"><input type="number" inputmode="decimal" value="'+coeffs[i]+'" oninput="setCoeff('+i+',this.value)"><span class="pc">%</span></div>';
+    box.appendChild(d);});
+}
+function setCoeff(i,v){coeffs[i]=parseFloat((v||'').replace(',','.'))||0;recompute();}
+
+function renderLetture(){
+  const box=document.getElementById('letture');box.innerHTML='';const pesoPot=nv('peso');
+  letture.forEach((L,li)=>{
+    const div=document.createElement('div');div.className='lettura';
+    let html='<div class="lhead"><span class="t">Campione '+(li+1)+'</span>';
+    if(letture.length>1) html+='<button class="rm" onclick="delLettura('+li+')">Rimuovi</button>';
+    html+='</div><div class="g2">';
+    html+='<div class="f"><label>Piante esaminate</label><input type="number" inputmode="numeric" value="'+L.pl+'" oninput="setPl('+li+',this.value)"></div>';
+    const wval=(L.w&&L.w>0)?L.w:'';
+    html+='<div class="f"><label>Peso totale bacche (kg)</label><input type="number" inputmode="decimal" value="'+wval+'" placeholder="kg pesati" oninput="setW('+li+',this.value)"></div></div>';
+    html+='<div class="note" style="margin:4px 0 6px">Conteggio bacche per classe: opzionale (per bacche/pianta, peso medio bacca e qualità).</div>';
+    BANDS.forEach((x,i)=>{
+      html+='<div class="band"><div class="nm"><b>'+x.l+')</b> '+x.nm+'<span class="cfb" id="lcf'+li+'_'+i+'">'+coeffs[i]+'%</span></div>'+
+        '<div class="ct"><button class="minus" onclick="lstep('+li+','+i+',-1)">−</button>'+
+        '<input class="val" id="lv'+li+'_'+i+'" type="number" inputmode="numeric" value="'+L.c[i]+'" oninput="setC('+li+','+i+',this.value)">'+
+        '<button class="plus" onclick="lstep('+li+','+i+',1)">+</button></div></div>';
+    });
+    html+='<div class="lout"><span class="k">kg/pianta <b id="lkg'+li+'">—</b> · bacche/pianta <b id="lbpp'+li+'">—</b> · peso bacca <b id="lpb'+li+'">—</b> · qualità <b id="ldmq'+li+'">—</b></span></div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+}
+function setPl(li,v){letture[li].pl=parseFloat((v||'').replace(',','.'))||0;recompute();}
+function setW(li,v){letture[li].w=parseFloat((v||'').replace(',','.'))||0;recompute();}
+function setC(li,i,v){let n=parseInt(v,10);if(isNaN(n)||n<0)n=0;letture[li].c[i]=n;recompute();}
+function lstep(li,i,d){letture[li].c[i]=Math.max(0,letture[li].c[i]+d);if(navigator.vibrate)navigator.vibrate(d>0?18:30);
+  const e=document.getElementById('lv'+li+'_'+i);if(e)e.value=letture[li].c[i];recompute();}
+function addLettura(){letture.push({pl:3,w:0,c:[0,0,0,0,0]});renderLetture();recompute();if(navigator.vibrate)navigator.vibrate(25);}
+function delLettura(li){letture.splice(li,1);renderLetture();recompute();}
+
+function buildLegend(){
+  const box=document.getElementById('legend');box.innerHTML='';
+  BANDS.forEach(x=>{const d=document.createElement('div');d.className='lgrow';
+    d.innerHTML='<div class="top"><span class="cl">'+x.l+') '+x.nm+'</span><span class="pc">'+x.cf+'%</span></div><div class="desc">'+x.d+'</div>';
+    box.appendChild(d);});
+}
+
+function recompute(){
+  const s=nv('sup'),k=nv('k'),x=nv('x'),y=nv('y');
+  let aha=0,i=0;
+  if(x>0&&y>0){const dens=(MODE==='s')?(1/(x*y)):(2/(x*y)); aha=dens*10000*(100-k)/100;}
+  const sha=s/10000;
+  if(aha>0&&sha>0)i=aha*sha;
+  setT('r_a',i?f(i,0):'—'); setT('r_aha',aha?f(aha,0):'—');
+
+  const bpot=nv('bpot'),peso=nv('peso');
+  const kgpot=bpot*peso, pot=i*kgpot/100, potha=aha*kgpot/100;
+  setT('r_kgpot',kgpot?f(kgpot,3)+' kg':'—');
+  setT('r_pot',(kgpot>0&&i>0)?f(pot,2)+' q.li':'—'); setT('r_potha',(kgpot>0&&aha>0)?f(potha,2)+' q.li/ha':'—');
+
+  let SP=0,Spres=0,SW=0; const qdan=[];
+  letture.forEach((L,li)=>{
+    const pres=L.c.reduce((a,b)=>a+b,0);
+    const wt=(L.w>0)?L.w:0;                       // peso TOTALE pesato (kg)
+    let sc=0; L.c.forEach((n,j)=>sc+=n*(coeffs[j]||0));
+    const dq=pres>0?sc/pres:0;
+    const kgpp=(L.pl>0&&wt>0)?wt/L.pl:0;          // kg/pianta = peso totale / piante
+    const bpp_c=(L.pl>0&&pres>0)?pres/L.pl:0;
+    const pmb=(pres>0&&wt>0)?wt/pres:0;
+    setT('lkg'+li,kgpp>0?f(kgpp,3):'—'); setT('lbpp'+li,bpp_c>0?f(bpp_c,1):'—');
+    setT('lpb'+li,pmb>0?f(pmb,3):'—'); setT('ldmq'+li,pres>0?f(dq,1)+'%':'—');
+    BANDS.forEach((b,j)=>setT('lcf'+li+'_'+j,(coeffs[j]||0)+'%'));
+    SP+=(L.pl>0?L.pl:0); Spres+=pres; SW+=wt;
+    if(pres>0)qdan.push(dq);
+  });
+  const kgppT=SP>0?SW/SP:0;                        // kg/pianta mediato (dai pesi)
+  const bpp=(SP>0&&Spres>0)?Spres/SP:0;
+  const pmbT=(Spres>0&&SW>0)?SW/Spres:0;
+  const O=i*kgppT/100, Oha=aha*kgppT/100;
+  setT('q_n',letture.length); setT('q_pres',Spres); setT('q_bott',bpp>0?f(bpp,2):'—');
+  setT('r_bott',bpp>0?f(bpp,2):'—'); setT('r_kgott',kgppT>0?f(kgppT,3)+' kg':'—');
+  setT('r_pmb',pmbT>0?f(pmbT,3)+' kg':'—');
+  setT('r_ott',(kgppT>0&&i>0)?f(O,2)+' q.li':'—'); setT('r_ottha',(kgppT>0&&aha>0)?f(Oha,2)+' q.li/ha':'—');
+
+  const rawA=nv('assic'), rawD=nv('detr');
+  const Aha    = (UNITA==='part') ? (sha>0?rawA/sha:0) : rawA;   // sempre q.li/ha internamente
+  const detrHa = (UNITA==='part') ? (sha>0?rawD/sha:0) : rawD;
+  const baseHa = Aha>0 ? Aha : potha;            // base per ettaro
+  const Rha = Math.max(0, baseHa - detrHa);
+  setT('r_Rha', Rha>0? f(Rha,2)+' q.li/ha':'—');
+  setT('r_R', (Rha>0&&sha>0)? f(Rha*sha,2)+' q.li':'—');
+  // assicurata e detrazione in entrambe le unità
+  setT('r_Aboth', rawA>0 ? (sha>0 ? f(Aha,2)+' q.li/ha · '+f(Aha*sha,2)+' q.li' : (UNITA==='part'?f(rawA,2)+' q.li':f(rawA,2)+' q.li/ha')) : '—');
+  setT('r_Dboth', rawD>0 ? (sha>0 ? f(detrHa,2)+' q.li/ha · '+f(detrHa*sha,2)+' q.li' : (UNITA==='part'?f(rawD,2)+' q.li':f(rawD,2)+' q.li/ha')) : '—');
+
+  const db=document.getElementById('detr_box');
+  if(detrHa>0 && baseHa>0){
+    setT('detr_pct',f(detrHa/baseHa*100,1)+'%'); setT('detr_ha',f(detrHa,2)+' q.li/ha');
+    setT('detr_tot',(sha>0)?f(detrHa*sha,2)+' q.li':'—'); db.style.display='block';
+  } else db.style.display='none';
+
+  const dmq=qdan.length>0?qdan.reduce((a,c)=>a+c,0)/qdan.length:0;
+  setT('q_dmq',qdan.length>0?f(dmq,1)+'%':'—'); setT('r_dmq',qdan.length>0?f(dmq,1)+'%':'—'); setT('r_nlett',letture.length);
+
+  if(kgppT>0 && Rha>0){
+    const aspHa=Math.max(0,Rha-Oha);
+    setT('r_aspha',f(aspHa,2)+' q.li/ha'); setT('r_asp',(sha>0)?f(aspHa*sha,2)+' q.li':'—');
+    const dq=Math.max(0,(Rha-Oha)/Rha*100), dqu=dmq*(100-dq)/100;
+    const rdq=Math.round(dq), rdqu=Math.round(dqu);
+    setT('r_dq',f(dq,1)+'% → '+rdq); setT('r_dqu',f(dqu,1)+'% → '+rdqu);
+    setT('r_dq2',rdq+'%'); setT('r_dqu2',rdqu+'%'); setT('r_tot',(rdq+rdqu)+'%');
+  } else {setT('r_aspha','—');setT('r_asp','—');setT('r_dq','—');setT('r_dqu','—');setT('r_dq2','—');setT('r_dqu2','—');setT('r_tot','—');}
+  saveWork();
+}
+
+function asciiFix(s){return s
+  .replace(/\u2192/g,'->').replace(/\u2014/g,'-').replace(/\u2013/g,'-').replace(/\u00B7/g,'|').replace(/\u00B2/g,'2')
+  .replace(/[\u00E0\u00E1\u00E2]/g,"a'").replace(/[\u00E8\u00E9\u00EA]/g,"e'").replace(/[\u00EC\u00ED]/g,"i'").replace(/[\u00F2\u00F3]/g,"o'").replace(/[\u00F9\u00FA]/g,"u'")
+  .replace(/[\u00C0\u00C1\u00C2]/g,"A'").replace(/[\u00C8\u00C9]/g,"E'").replace(/[\u00CC\u00CD]/g,"I'").replace(/[\u00D2\u00D3]/g,"O'").replace(/[\u00D9\u00DA]/g,"U'")
+  .replace(/\u2019/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/[\u2018]/g,"'").replace(/\u2212/g,'-').replace(/\u2264/g,'<=').replace(/\u2265/g,'>=')
+  .replace(/[^\x00-\x7F]/g,'');}
+function exportTxt(){
+  const g=id=>document.getElementById(id).value, t=id=>document.getElementById(id).textContent;
+  const sesto = MODE==='s' ? ('singola interfila '+g('x')+' x piante '+g('y')) : ('binata centro-bine '+g('x')+' x piante '+g('y'));
+  const L=['=== PERIZIA POMODORO CONCENTRATO (campo) ===','Export: '+new Date().toLocaleString('it-IT'),'',
+    'Certificato n.: '+(g('dat_cert')||'-'),
+    'Data perizia: '+(itDate(g('dat_data'))||'-'),
+    'Assicurato: '+(g('dat_assic')||'-'),
+    'Partita: '+(g('dat_part')||'-'),
+    'Luogo/Foglio: '+(g('loc_foglio')||'-'),
+    'Perito/i: '+(g('dat_periti')||'-'),
+    'Coordinate: '+((g('loc_lat')&&g('loc_lon'))?(g('loc_lat')+', '+g('loc_lon')):'-'),'',
+    'Superficie '+g('sup')+' mq | sesto '+sesto+' | fallanze '+g('k')+'%',
+    'Piante partita (i): '+t('r_a')+' | Piante/ha: '+t('r_aha'),'',
+    'Bacche/pianta potenz.: '+g('bpot')+' | peso bacca: '+g('peso')+' kg',
+    'Prod. potenziale: '+t('r_pot')+' | /ha: '+t('r_potha'),'',
+    '-- QUANTITA PRESENTE --',
+    'Bacche presenti/pianta: '+t('r_bott')+' | kg/pianta: '+t('r_kgott'),
+    'Ottenibile: '+t('r_ott')+' | /ha: '+t('r_ottha'),'',
+    '-- LIQUIDAZIONE --',
+    'Assicurata (A): '+t('r_Aboth')+' | Detrazione: '+t('r_Dboth'),
+    'Risarcibile R/ha: '+t('r_Rha')+' | R partita: '+t('r_R'),
+    'Asportato/ha: '+t('r_aspha')+' | partita: '+t('r_asp')];
+  if(document.getElementById('detr_box').style.display!=='none') L.push('Detrazione: '+t('detr_pct')+' | '+t('detr_ha')+' | '+t('detr_tot'));
+  L.push('','-- CAMPIONI (Concentrato) --');
+  letture.forEach((Lt,li)=>{const cls=BANDS.map((b,j)=>b.l+'='+Lt.c[j]).join(' ');
+    L.push('Camp.'+(li+1)+' (piante '+Lt.pl+', peso tot '+(Lt.w||0)+' kg): '+cls+' -> '+(t('ldmq'+li)||''));});
+  L.push('Coeff: '+BANDS.map((b,j)=>b.l+coeffs[j]).join(' '),
+    'Danno qualita medio: '+t('q_dmq'),'',
+    '=== RISULTATO ===','DANNO QUANTITA: '+t('r_dq'),'DANNO QUALITA (residuato): '+t('r_dqu'),'DANNO TOTALE: '+t('r_tot'));
+  L.push('','App di proprieta di Zanardini Stefano - cod. 7313');
+  const blob=new Blob([asciiFix(L.join('\n'))],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);const fnAss=((g('dat_assic')||'perizia').trim().replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,''))||'perizia';
+  const fnData=(g('dat_data')||todayISO()).replace(/-/g,'');
+  a.download='perizia_'+fnAss+'_'+fnData+'.txt';a.click();
+}
+function resetForm(){
+  ['sup','x','y','bpot','peso','assic','detr','loc_lat','loc_lon','loc_foglio','dat_cert','dat_assic','dat_part','dat_periti'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});var _dd2=document.getElementById('dat_data');if(_dd2)_dd2.value=todayISO();
+  const kk=document.getElementById('k');if(kk)kk.value='0';
+  coeffs=BANDS.map(b=>b.cf); letture=[{pl:3,w:0,c:[0,0,0,0,0]}];
+  renderCoeff();renderLetture();recompute();
+}
+function resetAll(){
+  if(!confirm('Azzerare la perizia in corso? (l\'archivio resta)'))return;
+  CURID=null;resetForm();saveWork();
+}
+
+loadWork();renderCoeff();renderLetture();buildLegend();setLocType(LOCTYPE);setUnitA(UNITA);setMode(MODE);renderArch();
+var _dd0=document.getElementById('dat_data');if(_dd0&&!_dd0.value)_dd0.value=todayISO();
+document.querySelector('.foot').style.display='flex';
+let _wl=null;
+async function keepAwake(){try{if('wakeLock' in navigator){_wl=await navigator.wakeLock.request('screen');}}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')keepAwake();});
+keepAwake();document.body.addEventListener('click',()=>{if(!_wl)keepAwake();});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+</script>
+</body>
+</html>
