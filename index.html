@@ -107,7 +107,7 @@
 </head>
 <body>
 <header>
-  <h1>🍅 POMODORO CONCENTRATO — campo</h1>
+  <h1>&#127813; POMODORO CONCENTRATO &#8212; campo</h1>
   <div class="tabs">
     <button id="tb1" class="on" onclick="tab(1)">PERIZIA</button>
     <button id="tb2" onclick="tab(2)">RILIEVI</button>
@@ -119,7 +119,7 @@
 <!-- PERIZIA -->
 <div class="wrap page on" id="p1">
   <div class="actrow">
-    <button class="sv" onclick="salvaPerizia()">💾 Salva perizia</button>
+    <button class="sv" onclick="salvaPerizia()">&#128190; Salva perizia</button>
     <button class="nw" onclick="nuovaPerizia()">+ Nuova</button>
   </div>
   <div class="box">
@@ -133,8 +133,8 @@
         <div class="f"><label>Latitudine</label><input id="loc_lat" type="number" inputmode="decimal" oninput="recompute()" placeholder="es. 45.5412"></div>
         <div class="f"><label>Longitudine</label><input id="loc_lon" type="number" inputmode="decimal" oninput="recompute()" placeholder="es. 10.2167"></div>
       </div>
-      <button class="gps" onclick="getGPS()">📍 Prendi posizione</button>
-      <button class="mapsbtn" onclick="openMapsForm()">🗺️ Apri su Google Maps</button>
+      <button class="gps" onclick="getGPS()">&#128205; Prendi posizione</button>
+      <button class="mapsbtn" onclick="openMapsForm()">&#128506;&#65039; Apri su Google Maps</button>
       <div class="note" id="loc_gps_msg" style="margin-top:6px">Acquisisce le coordinate dal GPS (4 decimali). Richiede GPS attivo e permesso posizione.</div>
     </div>
     <div id="loc_fm_box" style="display:none;margin-top:8px">
@@ -147,8 +147,8 @@
     </div>
   </div>
   <div class="box">
-    <h2>1 · Sesto e piante</h2>
-    <div class="f"><label>Superficie (m²)</label>
+    <h2>1 &#183; Sesto e piante</h2>
+    <div class="f"><label>Superficie (m&#178;)</label>
       <div class="conv"><input id="sup" type="number" inputmode="decimal" oninput="recompute()"><button onclick="haToMq()">da ha</button></div>
     </div>
     <div class="toggle">
@@ -160,33 +160,33 @@
       <div class="f"><label>Dist. piante (y) m</label><input id="y" type="number" inputmode="decimal" oninput="recompute()"></div>
     </div>
     <div class="f"><label>Fallanze (k) %</label><input id="k" type="number" inputmode="decimal" value="0" oninput="recompute()"></div>
-    <div class="note" id="sestonote">Singola: piante = (sup×10000)/(x·y)×(100−k)/100.</div>
-    <div class="res hi"><span class="k">Piante partita (i)</span><span class="v" id="r_a">—</span></div>
-    <div class="res blue"><span class="k">Piante / ha</span><span class="v" id="r_aha">—</span></div>
+    <div class="note" id="sestonote">Singola: piante = (sup&#215;10000)/(x&#183;y)&#215;(100&#8722;k)/100.</div>
+    <div class="res hi"><span class="k">Piante partita (i)</span><span class="v" id="r_a">&#8212;</span></div>
+    <div class="res blue"><span class="k">Piante / ha</span><span class="v" id="r_aha">&#8212;</span></div>
   </div>
 
   <div class="box">
-    <h2>2 · Potenziale</h2>
+    <h2>2 &#183; Potenziale</h2>
     <div class="g2">
       <div class="f"><label>Bacche/pianta potenz.</label><input id="bpot" type="number" inputmode="decimal" oninput="recompute()"></div>
       <div class="f"><label>Peso medio bacca kg</label><input id="peso" type="number" inputmode="decimal" oninput="recompute()"></div>
     </div>
-    <div class="res"><span class="k">kg/pianta potenziale</span><span class="v" id="r_kgpot">—</span></div>
-    <div class="res blue"><span class="k">Prod. potenziale</span><span class="v" id="r_pot">—</span></div>
-    <div class="res blue"><span class="k">Prod. potenziale / ha</span><span class="v" id="r_potha">—</span></div>
+    <div class="res"><span class="k">kg/pianta potenziale</span><span class="v" id="r_kgpot">&#8212;</span></div>
+    <div class="res blue"><span class="k">Prod. potenziale</span><span class="v" id="r_pot">&#8212;</span></div>
+    <div class="res blue"><span class="k">Prod. potenziale / ha</span><span class="v" id="r_potha">&#8212;</span></div>
   </div>
 
   <div class="box">
-    <h2>3 · Quantità presente</h2>
-    <div class="fromq">↳ dalle bacche presenti rilevate</div>
-    <div class="res"><span class="k">Bacche presenti / pianta</span><span class="v" id="r_bott">—</span></div>
-    <div class="res"><span class="k">kg/pianta (peso medio pianta)</span><span class="v" id="r_kgott">—</span></div><div class="res"><span class="k">Peso medio bacca (misurato)</span><span class="v" id="r_pmb">—</span></div>
-    <div class="res green"><span class="k">Ottenibile (partita)</span><span class="v" id="r_ott">—</span></div>
-    <div class="res green"><span class="k">Ottenibile / ha</span><span class="v" id="r_ottha">—</span></div>
+    <h2>3 &#183; Quantit&#224; presente</h2>
+    <div class="fromq">&#8627; dalle bacche presenti rilevate</div>
+    <div class="res"><span class="k">Bacche presenti / pianta</span><span class="v" id="r_bott">&#8212;</span></div>
+    <div class="res"><span class="k">kg/pianta (peso medio pianta)</span><span class="v" id="r_kgott">&#8212;</span></div><div class="res"><span class="k">Peso medio bacca (misurato)</span><span class="v" id="r_pmb">&#8212;</span></div>
+    <div class="res green"><span class="k">Ottenibile (partita)</span><span class="v" id="r_ott">&#8212;</span></div>
+    <div class="res green"><span class="k">Ottenibile / ha</span><span class="v" id="r_ottha">&#8212;</span></div>
   </div>
 
   <div class="box">
-    <h2>4 · Liquidazione quantità</h2>
+    <h2>4 &#183; Liquidazione quantit&#224;</h2>
     <div class="toggle" style="margin-bottom:8px">
       <button id="uA_part" onclick="setUnitA('part')">Dato a partita</button>
       <button id="uA_ha" class="on" onclick="setUnitA('ha')">Dato a q.li/ha</button>
@@ -195,36 +195,36 @@
       <div class="f"><label id="lbA">Assicurata (q.li/ha)</label><input id="assic" type="number" inputmode="decimal" oninput="recompute()"></div>
       <div class="f"><label id="lbD">Detrazione (q.li/ha)</label><input id="detr" type="number" inputmode="decimal" oninput="recompute()" placeholder="0"></div>
     </div>
-    <div class="note">Scegli se inserire i dati <b>a partita</b> o <b>a q.li/ha</b>. R = assicurata − detrazione. Detrazione = quota che giudichi NON in garanzia. Se A vuota uso la potenziale. Con dati a partita serve la superficie.</div>
-    <div class="res blue"><span class="k">Assicurata (A)</span><span class="v" id="r_Aboth" style="font-size:15px;white-space:normal;text-align:right">—</span></div>
-    <div class="res"><span class="k">Detrazione</span><span class="v" id="r_Dboth" style="font-size:15px;white-space:normal;text-align:right">—</span></div>
-    <div class="res green"><span class="k">Risarcibile R / ha</span><span class="v" id="r_Rha">—</span></div>
-    <div class="res"><span class="k">Risarcibile R (partita)</span><span class="v" id="r_R">—</span></div>
-    <div class="res"><span class="k">Asportato / ha</span><span class="v" id="r_aspha">—</span></div>
-    <div class="res"><span class="k">Asportato (partita)</span><span class="v" id="r_asp">—</span></div>
-    <div class="res hi"><span class="k">DANNO QUANTITÀ</span><span class="v" id="r_dq">—</span></div>
+    <div class="note">Scegli se inserire i dati <b>a partita</b> o <b>a q.li/ha</b>. R = assicurata &#8722; detrazione. Detrazione = quota che giudichi NON in garanzia. Se A vuota uso la potenziale. Con dati a partita serve la superficie.</div>
+    <div class="res blue"><span class="k">Assicurata (A)</span><span class="v" id="r_Aboth" style="font-size:15px;white-space:normal;text-align:right">&#8212;</span></div>
+    <div class="res"><span class="k">Detrazione</span><span class="v" id="r_Dboth" style="font-size:15px;white-space:normal;text-align:right">&#8212;</span></div>
+    <div class="res green"><span class="k">Risarcibile R / ha</span><span class="v" id="r_Rha">&#8212;</span></div>
+    <div class="res"><span class="k">Risarcibile R (partita)</span><span class="v" id="r_R">&#8212;</span></div>
+    <div class="res"><span class="k">Asportato / ha</span><span class="v" id="r_aspha">&#8212;</span></div>
+    <div class="res"><span class="k">Asportato (partita)</span><span class="v" id="r_asp">&#8212;</span></div>
+    <div class="res hi"><span class="k">DANNO QUANTIT&#192;</span><span class="v" id="r_dq">&#8212;</span></div>
   </div>
 
   <div class="box detr" id="detr_box" style="display:none">
     <h2>Dettaglio detrazione</h2>
-    <div class="res"><span class="k">% detrazione su base</span><span class="v" id="detr_pct">—</span></div>
-    <div class="res"><span class="k">Q.li/ha in meno</span><span class="v" id="detr_ha">—</span></div>
-    <div class="res"><span class="k">Q.li totali in meno</span><span class="v" id="detr_tot">—</span></div>
+    <div class="res"><span class="k">% detrazione su base</span><span class="v" id="detr_pct">&#8212;</span></div>
+    <div class="res"><span class="k">Q.li/ha in meno</span><span class="v" id="detr_ha">&#8212;</span></div>
+    <div class="res"><span class="k">Q.li totali in meno</span><span class="v" id="detr_tot">&#8212;</span></div>
   </div>
 
   <div class="box">
-    <h2>5 · Qualità</h2>
-    <div class="fromq">↳ media dei danni dei campioni, residuata</div>
+    <h2>5 &#183; Qualit&#224;</h2>
+    <div class="fromq">&#8627; media dei danni dei campioni, residuata</div>
     <div class="res"><span class="k">Campioni eseguiti</span><span class="v" id="r_nlett">0</span></div>
-    <div class="res"><span class="k">Danno medio qualità</span><span class="v" id="r_dmq">—</span></div>
-    <div class="res hi"><span class="k">DANNO QUALITÀ (residuato)</span><span class="v" id="r_dqu">—</span></div>
+    <div class="res"><span class="k">Danno medio qualit&#224;</span><span class="v" id="r_dmq">&#8212;</span></div>
+    <div class="res hi"><span class="k">DANNO QUALIT&#192; (residuato)</span><span class="v" id="r_dqu">&#8212;</span></div>
   </div>
 
   <div class="box final">
-    <h2>6 · Risultato</h2>
-    <div class="res"><span class="k">Danno quantità</span><span class="v" id="r_dq2">—</span></div>
-    <div class="res"><span class="k">Danno qualità (residuato)</span><span class="v" id="r_dqu2">—</span></div>
-    <div class="res tot"><span class="k">Danno totale</span><span class="v" id="r_tot">—</span></div>
+    <h2>6 &#183; Risultato</h2>
+    <div class="res"><span class="k">Danno quantit&#224;</span><span class="v" id="r_dq2">&#8212;</span></div>
+    <div class="res"><span class="k">Danno qualit&#224; (residuato)</span><span class="v" id="r_dqu2">&#8212;</span></div>
+    <div class="res tot"><span class="k">Danno totale</span><span class="v" id="r_tot">&#8212;</span></div>
   </div>
   <div class="note" style="text-align:center;padding:0 6px 8px">Percentuali al lordo di franchigia. Verificare soglia/franchigia di contratto.</div>
 </div>
@@ -232,29 +232,29 @@
 <!-- RILIEVI -->
 <div class="wrap page" id="p2">
   <div class="box">
-    <h2>Coefficienti — Concentrato</h2>
+    <h2>Coefficienti &#8212; Concentrato</h2>
     <div class="coefrow" id="coefrow"></div>
     <div class="note">Tab. A liquidativa Pomodoro, colonna Concentrato/Pomodorino. Modificabili.</div>
   </div>
   <div id="letture"></div>
-  <button class="qadd" onclick="addLettura()">＋ AGGIUNGI CAMPIONE</button>
+  <button class="qadd" onclick="addLettura()">&#65291; AGGIUNGI CAMPIONE</button>
   <div class="box qtot">
     <h2>Totali rilievi</h2>
     <div class="res"><span class="k">Campioni</span><span class="v" id="q_n">0</span></div>
     <div class="res"><span class="k">Bacche presenti tot.</span><span class="v" id="q_pres">0</span></div>
-    <div class="res"><span class="k">Bacche presenti / pianta</span><span class="v" id="q_bott">—</span></div>
-    <div class="res big"><span class="k">Danno medio qualità</span><span class="v" id="q_dmq">—</span></div>
-    <div class="note" style="color:#cfc6b4">Entra da solo nella PERIZIA (quantità presente + qualità).</div>
+    <div class="res"><span class="k">Bacche presenti / pianta</span><span class="v" id="q_bott">&#8212;</span></div>
+    <div class="res big"><span class="k">Danno medio qualit&#224;</span><span class="v" id="q_dmq">&#8212;</span></div>
+    <div class="note" style="color:#cfc6b4">Entra da solo nella PERIZIA (quantit&#224; presente + qualit&#224;).</div>
   </div>
 </div>
 
 <!-- TABELLA -->
 <div class="wrap page" id="p3">
   <div class="box">
-    <h2>Tab. A — Pomodoro Concentrato</h2>
-    <div class="note" style="margin:-4px 0 10px">Tabella liquidativa Pomodoro, colonna Concentrato e Pomodorino — tutte le avversità. Active Raccolto, ed. 20.02.2026 (Art. 21.4).</div>
+    <h2>Tab. A &#8212; Pomodoro Concentrato</h2>
+    <div class="note" style="margin:-4px 0 10px">Tabella liquidativa Pomodoro, colonna Concentrato e Pomodorino &#8212; tutte le avversit&#224;. Active Raccolto, ed. 20.02.2026 (Art. 21.4).</div>
     <div id="legend"></div>
-    <div class="lgnote"><b>Solo danno di quantità:</b> le bacche perse, distrutte o che presentano fenomeni di marcescenza evidente, raggrinzimento, depigmentazione della bacca per una superficie superiore a 2/3 dovuti agli eventi atmosferici assicurati, tali da azzerare il loro valore intrinseco e comunque che non possono essere destinate alla trasformazione industriale, vengono valutati solo agli effetti del danno di quantità.</div>
+    <div class="lgnote"><b>Solo danno di quantit&#224;:</b> le bacche perse, distrutte o che presentano fenomeni di marcescenza evidente, raggrinzimento, depigmentazione della bacca per una superficie superiore a 2/3 dovuti agli eventi atmosferici assicurati, tali da azzerare il loro valore intrinseco e comunque che non possono essere destinate alla trasformazione industriale, vengono valutati solo agli effetti del danno di quantit&#224;.</div>
   </div>
 </div>
 
@@ -268,15 +268,15 @@
 
 <div class="foot">
   <button class="rst" onclick="resetAll()">Azzera</button>
-  <button class="exp" onclick="exportTxt()">⬇ Salva .txt</button>
+  <button class="exp" onclick="exportTxt()">&#11015; Salva .txt</button>
 </div>
 
-<div class="owner">Proprietà di Stefano Zanardini · cod. 7313</div>
+<div class="owner">Propriet&#224; di Stefano Zanardini &#183; cod. 7313</div>
 <script>
 const BANDS=[
   {l:'a',nm:'Illese',cf:0, d:'Fiori e bacche illese; depigmentazione della bacca per una superficie inferiore 1/10'},
   {l:'b',nm:'Lievi',cf:5, d:'Qualche ammaccatura; lesioni cicatrizzate all\u2019epicarpo, depigmentazione della bacca per una superficie compresa tra 1/10 e 1/4'},
-  {l:'c',nm:'Medie',cf:20, d:'Più ammaccature; lesioni non cicatrizzate all\u2019epicarpo; lesioni lievi al mesocarpo; deformazioni leggere, depigmentazione della bacca per una superficie compresa tra 1/4 e 2/3'},
+  {l:'c',nm:'Medie',cf:20, d:'Pi\u00f9 ammaccature; lesioni non cicatrizzate all\u2019epicarpo; lesioni lievi al mesocarpo; deformazioni leggere, depigmentazione della bacca per una superficie compresa tra 1/4 e 2/3'},
   {l:'d',nm:'Gravi',cf:55, d:'Lesioni medie al mesocarpo; deformazioni medie'},
   {l:'e',nm:'Molto gravi',cf:70, d:'Lesioni profonde e gravi al mesocarpo'}
 ];
@@ -304,16 +304,26 @@ function setLocType(t){LOCTYPE=t;
   document.getElementById('loc_fm_box').style.display=(t==='fm')?'block':'none';
   saveWork();
 }
+var _gpsWatch=null,_gpsTimer=null,_gpsBest=false;
+function stopGPS(){if(_gpsWatch!==null){try{navigator.geolocation.clearWatch(_gpsWatch);}catch(e){}_gpsWatch=null;}if(_gpsTimer){clearTimeout(_gpsTimer);_gpsTimer=null;}}
 function getGPS(){const msg=document.getElementById('loc_gps_msg');
   if(!('geolocation' in navigator)){msg.textContent='GPS non disponibile su questo dispositivo.';return;}
-  msg.textContent='Rilevamento posizione in corso...';
-  navigator.geolocation.getCurrentPosition(function(pos){
+  if(_gpsWatch!==null){stopGPS();msg.textContent='Ricerca posizione fermata.';return;}
+  _gpsBest=false;
+  msg.textContent='Ricerca posizione... all\'aperto, senza internet puo\' richiedere fino a 1 minuto. Premi di nuovo per fermare.';
+  _gpsWatch=navigator.geolocation.watchPosition(function(pos){
+    _gpsBest=true;
     document.getElementById('loc_lat').value=pos.coords.latitude.toFixed(4);
     document.getElementById('loc_lon').value=pos.coords.longitude.toFixed(4);
-    msg.textContent='Posizione acquisita ('+new Date().toLocaleTimeString('it-IT')+').';
+    var acc=pos.coords.accuracy?Math.round(pos.coords.accuracy):null;
+    msg.textContent='Posizione acquisita ('+new Date().toLocaleTimeString('it-IT')+(acc!=null?(', +/-'+acc+' m'):'')+'). Premi di nuovo per fermare.';
     recompute();
-  },function(err){msg.textContent='Posizione non ottenuta: '+(err.code===1?'permesso negato.':'riprova all\'aperto con GPS attivo.');},
-  {enableHighAccuracy:true,timeout:12000,maximumAge:0});
+    if(acc!=null&&acc<=25){stopGPS();}
+  },function(err){
+    if(err.code===1){msg.textContent='Permesso posizione negato. Attiva la posizione per questa app.';stopGPS();}
+    else{msg.textContent='Ancora nessun aggancio: tieni il dispositivo all\'aperto, cielo libero, GPS attivo...';}
+  },{enableHighAccuracy:true,timeout:90000,maximumAge:0});
+  _gpsTimer=setTimeout(function(){if(!_gpsBest){msg.textContent='Posizione non ottenuta dopo 90s. All\'aperto con cielo libero e GPS attivo, riprova.';}stopGPS();},92000);
 }
 function locLabel(){
   if(LOCTYPE==='fm'){const fg=(document.getElementById('loc_foglio').value||'').trim();return fg||'(luogo n.d.)';}
@@ -341,7 +351,7 @@ function loadArch(){try{const r=localStorage.getItem(ARCHKEY);return r?JSON.pars
 function storeArch(a){try{localStorage.setItem(ARCHKEY,JSON.stringify(a));}catch(e){}}
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function itDate(iso){if(!iso)return '';const x=(''+iso).split('-');return x.length===3?(x[2]+'/'+x[1]+'/'+x[0]):iso;}
-function dannoTxt(){return (document.getElementById('r_tot').textContent||'').replace('—','');}
+function dannoTxt(){return (document.getElementById('r_tot').textContent||'').replace('\u2014','');}
 function salvaPerizia(){
   const a=loadArch();
   if(CURID){const e=a.find(x=>x.id===CURID);
@@ -393,7 +403,7 @@ function setUnitA(u){UNITA=u;
 }
 function setMode(m){MODE=m;document.getElementById('md_s').classList.toggle('on',m==='s');document.getElementById('md_b').classList.toggle('on',m==='b');
   setT('lx',m==='s'?'Interfila (x) m':'Dist. centro bine (x) m');
-  setT('sestonote',m==='s'?'Singola: piante = (sup×10000)/(x·y)×(100−k)/100.':'Binata: piante = (sup×10000)/((x·y)/2)×(100−k)/100 (raddoppio bina).');
+  setT('sestonote',m==='s'?'Singola: piante = (sup\u00d710000)/(x\u00b7y)\u00d7(100\u2212k)/100.':'Binata: piante = (sup\u00d710000)/((x\u00b7y)/2)\u00d7(100\u2212k)/100 (raddoppio bina).');
   recompute();}
 
 function renderCoeff(){
@@ -414,14 +424,14 @@ function renderLetture(){
     html+='<div class="f"><label>Piante esaminate</label><input type="number" inputmode="numeric" value="'+L.pl+'" oninput="setPl('+li+',this.value)"></div>';
     const wval=(L.w&&L.w>0)?L.w:'';
     html+='<div class="f"><label>Peso totale bacche (kg)</label><input type="number" inputmode="decimal" value="'+wval+'" placeholder="kg pesati" oninput="setW('+li+',this.value)"></div></div>';
-    html+='<div class="note" style="margin:4px 0 6px">Conteggio bacche per classe: opzionale (per bacche/pianta, peso medio bacca e qualità).</div>';
+    html+='<div class="note" style="margin:4px 0 6px">Conteggio bacche per classe: opzionale (per bacche/pianta, peso medio bacca e qualit\u00e0).</div>';
     BANDS.forEach((x,i)=>{
       html+='<div class="band"><div class="nm"><b>'+x.l+')</b> '+x.nm+'<span class="cfb" id="lcf'+li+'_'+i+'">'+coeffs[i]+'%</span></div>'+
-        '<div class="ct"><button class="minus" onclick="lstep('+li+','+i+',-1)">−</button>'+
+        '<div class="ct"><button class="minus" onclick="lstep('+li+','+i+',-1)">\u2212</button>'+
         '<input class="val" id="lv'+li+'_'+i+'" type="number" inputmode="numeric" value="'+L.c[i]+'" oninput="setC('+li+','+i+',this.value)">'+
         '<button class="plus" onclick="lstep('+li+','+i+',1)">+</button></div></div>';
     });
-    html+='<div class="lout"><span class="k">kg/pianta <b id="lkg'+li+'">—</b> · bacche/pianta <b id="lbpp'+li+'">—</b> · peso bacca <b id="lpb'+li+'">—</b> · qualità <b id="ldmq'+li+'">—</b></span></div>';
+    html+='<div class="lout"><span class="k">kg/pianta <b id="lkg'+li+'">\u2014</b> \u00b7 bacche/pianta <b id="lbpp'+li+'">\u2014</b> \u00b7 peso bacca <b id="lpb'+li+'">\u2014</b> \u00b7 qualit\u00e0 <b id="ldmq'+li+'">\u2014</b></span></div>';
     div.innerHTML=html;box.appendChild(div);
   });
 }
@@ -446,12 +456,12 @@ function recompute(){
   if(x>0&&y>0){const dens=(MODE==='s')?(1/(x*y)):(2/(x*y)); aha=dens*10000*(100-k)/100;}
   const sha=s/10000;
   if(aha>0&&sha>0)i=aha*sha;
-  setT('r_a',i?f(i,0):'—'); setT('r_aha',aha?f(aha,0):'—');
+  setT('r_a',i?f(i,0):'\u2014'); setT('r_aha',aha?f(aha,0):'\u2014');
 
   const bpot=nv('bpot'),peso=nv('peso');
   const kgpot=bpot*peso, pot=i*kgpot/100, potha=aha*kgpot/100;
-  setT('r_kgpot',kgpot?f(kgpot,3)+' kg':'—');
-  setT('r_pot',(kgpot>0&&i>0)?f(pot,2)+' q.li':'—'); setT('r_potha',(kgpot>0&&aha>0)?f(potha,2)+' q.li/ha':'—');
+  setT('r_kgpot',kgpot?f(kgpot,3)+' kg':'\u2014');
+  setT('r_pot',(kgpot>0&&i>0)?f(pot,2)+' q.li':'\u2014'); setT('r_potha',(kgpot>0&&aha>0)?f(potha,2)+' q.li/ha':'\u2014');
 
   let SP=0,Spres=0,SW=0; const qdan=[];
   letture.forEach((L,li)=>{
@@ -462,8 +472,8 @@ function recompute(){
     const kgpp=(L.pl>0&&wt>0)?wt/L.pl:0;          // kg/pianta = peso totale / piante
     const bpp_c=(L.pl>0&&pres>0)?pres/L.pl:0;
     const pmb=(pres>0&&wt>0)?wt/pres:0;
-    setT('lkg'+li,kgpp>0?f(kgpp,3):'—'); setT('lbpp'+li,bpp_c>0?f(bpp_c,1):'—');
-    setT('lpb'+li,pmb>0?f(pmb,3):'—'); setT('ldmq'+li,pres>0?f(dq,1)+'%':'—');
+    setT('lkg'+li,kgpp>0?f(kgpp,3):'\u2014'); setT('lbpp'+li,bpp_c>0?f(bpp_c,1):'\u2014');
+    setT('lpb'+li,pmb>0?f(pmb,3):'\u2014'); setT('ldmq'+li,pres>0?f(dq,1)+'%':'\u2014');
     BANDS.forEach((b,j)=>setT('lcf'+li+'_'+j,(coeffs[j]||0)+'%'));
     SP+=(L.pl>0?L.pl:0); Spres+=pres; SW+=wt;
     if(pres>0)qdan.push(dq);
@@ -472,39 +482,39 @@ function recompute(){
   const bpp=(SP>0&&Spres>0)?Spres/SP:0;
   const pmbT=(Spres>0&&SW>0)?SW/Spres:0;
   const O=i*kgppT/100, Oha=aha*kgppT/100;
-  setT('q_n',letture.length); setT('q_pres',Spres); setT('q_bott',bpp>0?f(bpp,2):'—');
-  setT('r_bott',bpp>0?f(bpp,2):'—'); setT('r_kgott',kgppT>0?f(kgppT,3)+' kg':'—');
-  setT('r_pmb',pmbT>0?f(pmbT,3)+' kg':'—');
-  setT('r_ott',(kgppT>0&&i>0)?f(O,2)+' q.li':'—'); setT('r_ottha',(kgppT>0&&aha>0)?f(Oha,2)+' q.li/ha':'—');
+  setT('q_n',letture.length); setT('q_pres',Spres); setT('q_bott',bpp>0?f(bpp,2):'\u2014');
+  setT('r_bott',bpp>0?f(bpp,2):'\u2014'); setT('r_kgott',kgppT>0?f(kgppT,3)+' kg':'\u2014');
+  setT('r_pmb',pmbT>0?f(pmbT,3)+' kg':'\u2014');
+  setT('r_ott',(kgppT>0&&i>0)?f(O,2)+' q.li':'\u2014'); setT('r_ottha',(kgppT>0&&aha>0)?f(Oha,2)+' q.li/ha':'\u2014');
 
   const rawA=nv('assic'), rawD=nv('detr');
   const Aha    = (UNITA==='part') ? (sha>0?rawA/sha:0) : rawA;   // sempre q.li/ha internamente
   const detrHa = (UNITA==='part') ? (sha>0?rawD/sha:0) : rawD;
   const baseHa = Aha>0 ? Aha : potha;            // base per ettaro
   const Rha = Math.max(0, baseHa - detrHa);
-  setT('r_Rha', Rha>0? f(Rha,2)+' q.li/ha':'—');
-  setT('r_R', (Rha>0&&sha>0)? f(Rha*sha,2)+' q.li':'—');
-  // assicurata e detrazione in entrambe le unità
-  setT('r_Aboth', rawA>0 ? (sha>0 ? f(Aha,2)+' q.li/ha · '+f(Aha*sha,2)+' q.li' : (UNITA==='part'?f(rawA,2)+' q.li':f(rawA,2)+' q.li/ha')) : '—');
-  setT('r_Dboth', rawD>0 ? (sha>0 ? f(detrHa,2)+' q.li/ha · '+f(detrHa*sha,2)+' q.li' : (UNITA==='part'?f(rawD,2)+' q.li':f(rawD,2)+' q.li/ha')) : '—');
+  setT('r_Rha', Rha>0? f(Rha,2)+' q.li/ha':'\u2014');
+  setT('r_R', (Rha>0&&sha>0)? f(Rha*sha,2)+' q.li':'\u2014');
+  // assicurata e detrazione in entrambe le unit\u00e0
+  setT('r_Aboth', rawA>0 ? (sha>0 ? f(Aha,2)+' q.li/ha \u00b7 '+f(Aha*sha,2)+' q.li' : (UNITA==='part'?f(rawA,2)+' q.li':f(rawA,2)+' q.li/ha')) : '\u2014');
+  setT('r_Dboth', rawD>0 ? (sha>0 ? f(detrHa,2)+' q.li/ha \u00b7 '+f(detrHa*sha,2)+' q.li' : (UNITA==='part'?f(rawD,2)+' q.li':f(rawD,2)+' q.li/ha')) : '\u2014');
 
   const db=document.getElementById('detr_box');
   if(detrHa>0 && baseHa>0){
     setT('detr_pct',f(detrHa/baseHa*100,1)+'%'); setT('detr_ha',f(detrHa,2)+' q.li/ha');
-    setT('detr_tot',(sha>0)?f(detrHa*sha,2)+' q.li':'—'); db.style.display='block';
+    setT('detr_tot',(sha>0)?f(detrHa*sha,2)+' q.li':'\u2014'); db.style.display='block';
   } else db.style.display='none';
 
   const dmq=qdan.length>0?qdan.reduce((a,c)=>a+c,0)/qdan.length:0;
-  setT('q_dmq',qdan.length>0?f(dmq,1)+'%':'—'); setT('r_dmq',qdan.length>0?f(dmq,1)+'%':'—'); setT('r_nlett',letture.length);
+  setT('q_dmq',qdan.length>0?f(dmq,1)+'%':'\u2014'); setT('r_dmq',qdan.length>0?f(dmq,1)+'%':'\u2014'); setT('r_nlett',letture.length);
 
   if(kgppT>0 && Rha>0){
     const aspHa=Math.max(0,Rha-Oha);
-    setT('r_aspha',f(aspHa,2)+' q.li/ha'); setT('r_asp',(sha>0)?f(aspHa*sha,2)+' q.li':'—');
+    setT('r_aspha',f(aspHa,2)+' q.li/ha'); setT('r_asp',(sha>0)?f(aspHa*sha,2)+' q.li':'\u2014');
     const dq=Math.max(0,(Rha-Oha)/Rha*100), dqu=dmq*(100-dq)/100;
     const rdq=Math.round(dq), rdqu=Math.round(dqu);
-    setT('r_dq',f(dq,1)+'% → '+rdq); setT('r_dqu',f(dqu,1)+'% → '+rdqu);
+    setT('r_dq',f(dq,1)+'% \u2192 '+rdq); setT('r_dqu',f(dqu,1)+'% \u2192 '+rdqu);
     setT('r_dq2',rdq+'%'); setT('r_dqu2',rdqu+'%'); setT('r_tot',(rdq+rdqu)+'%');
-  } else {setT('r_aspha','—');setT('r_asp','—');setT('r_dq','—');setT('r_dqu','—');setT('r_dq2','—');setT('r_dqu2','—');setT('r_tot','—');}
+  } else {setT('r_aspha','\u2014');setT('r_asp','\u2014');setT('r_dq','\u2014');setT('r_dqu','\u2014');setT('r_dq2','\u2014');setT('r_dqu2','\u2014');setT('r_tot','\u2014');}
   saveWork();
 }
 
