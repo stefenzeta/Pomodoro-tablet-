@@ -333,7 +333,7 @@ function locLabel(){
 function geoLat(){return (document.getElementById('loc_lat').value||'').trim();}
 function geoLon(){return (document.getElementById('loc_lon').value||'').trim();}
 function openMapsForm(){const la=geoLat(),lo=geoLon();
-  if(la&&lo){window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(la+','+lo),'_blank');}
+  if(la&&lo){window.open('https://maps.google.com/maps?q='+la+','+lo+'&t=k&z=18','_blank');}
   else{alert('Inserisci o acquisisci prima le coordinate.');}}
 function geoOf(e){if(e.lat&&e.lon)return e.lat+','+e.lon;
   if(e.loctype==='coord'&&e.st&&e.st.inp&&e.st.inp.loc_lat&&e.st.inp.loc_lon)return e.st.inp.loc_lat+','+e.st.inp.loc_lon;
@@ -380,7 +380,7 @@ function renderArch(){const box=document.getElementById('archlist');if(!box)retu
   a.forEach(function(e){const d=document.createElement('div');d.className='arow'+(e.id===CURID?' cur':'');
     d.innerHTML='<div class="atop"><span class="anome">'+esc(e.name||'')+'</span>'+(e.id===CURID?'<span class="acur">in uso</span>':'')+'</div>'+
       '<div class="ameta">\u{1F4CD} '+esc(e.loc||'-')+(e.danno?(' \u00B7 danno tot. '+esc(e.danno)):'')+'</div>'+
-      (geoOf(e)?('<a class="maps" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(geoOf(e))+'" target="_blank" rel="noopener">\u{1F5FA}\uFE0F Apri su Google Maps</a>'):'')+
+      (geoOf(e)?('<a class="maps" href="https://maps.google.com/maps?q='+geoOf(e)+'&t=k&z=18" target="_blank" rel="noopener">\u{1F5FA}\uFE0F Apri su Google Maps</a>'):'')+
       '<div class="adate"><label>Data</label><input type="date" value="'+esc(e.date||'')+'" onchange="dataPerizia(\''+e.id+'\',this.value)"></div>'+
       '<div class="abtn"><button class="open" onclick="aprePerizia(\''+e.id+'\')">Apri</button>'+
       '<button class="ren" onclick="rinominaPerizia(\''+e.id+'\')">Rinomina</button>'+
