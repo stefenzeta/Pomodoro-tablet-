@@ -198,7 +198,7 @@
       <div class="f"><label id="lbA">Assicurata (q.li/ha)</label><input id="assic" type="number" inputmode="decimal" oninput="recompute()"></div>
       <div class="f"><label id="lbD">Detrazione (q.li/ha)</label><input id="detr" type="number" inputmode="decimal" oninput="recompute()" placeholder="0"></div>
     </div>
-    <div class="note">Scegli se inserire i dati <b>a partita</b> o <b>a q.li/ha</b>. R = assicurata &#8722; detrazione. Detrazione = quota che giudichi NON in garanzia. Se lasci vuota la detrazione uso i <b>non risarcibili suggeriti</b> dai campioni; puoi sempre scriverne una tua o confermare l'assicurata. Se A vuota uso la potenziale.</div>
+    <div class="note">Scegli se inserire i dati <b>a partita</b> o <b>a q.li/ha</b>. R = assicurata &#8722; detrazione. Detrazione = quota che giudichi NON in garanzia (<b>0 = nessuna</b>). Qui sotto vedi un <b>suggerimento</b> dai non risarcibili: se vuoi applicarlo, scrivilo tu nella detrazione. Se A vuota uso la potenziale.</div>
     <div class="res"><span class="k">Non risarc. suggerito (da assenti)</span><span class="v" id="r_Nsug" style="font-size:15px;white-space:normal;text-align:right">&#8212;</span></div>
     <div class="res blue"><span class="k">Assicurata (A)</span><span class="v" id="r_Aboth" style="font-size:15px;white-space:normal;text-align:right">&#8212;</span></div>
     <div class="res"><span class="k">Detrazione</span><span class="v" id="r_Dboth" style="font-size:15px;white-space:normal;text-align:right">&#8212;</span></div>
@@ -516,19 +516,19 @@ function recompute(){
   // ===== non risarcibili (assenti non risarc x peso medio) -> suggerimento detrazione =====
   const anrPP=(SP>0)?SANR/SP:0;
   const Nha=anrPP*peso*aha/100, Npart=anrPP*peso*i/100;
-  setT('r_Nsug', Nha>0 ? (f(Nha,2)+' q.li/ha'+(sha>0?(' \u00b7 '+f(Npart,2)+' q.li'):'')) : '\u2014');
 
   // ===== liquidazione =====
   const rawA=nv('assic'), rawD=nv('detr');
   const Aha    = (UNITA==='part') ? (sha>0?rawA/sha:0) : rawA;
   const detrManHa = (UNITA==='part') ? (sha>0?rawD/sha:0) : rawD;
-  const detrHa = (rawD>0) ? detrManHa : Nha;         // se non scrivi la detrazione, uso il suggerito dai non risarc.
+  const detrHa = detrManHa;                          // detrazione = SOLO quella che scrivi tu (0 = nessuna)
   const baseHa = Aha>0 ? Aha : potha;
+  setT('r_Nsug', Nha>0 ? (f(Nha,2)+' q.li/ha'+(sha>0?(' \u00b7 '+f(Npart,2)+' q.li'):'')+(baseHa>0?(' \u00b7 '+f(Nha/baseHa*100,1)+'% della base'):'')) : '\u2014');
   const Rha = Math.max(0, baseHa - detrHa);
   setT('r_Rha', Rha>0? f(Rha,2)+' q.li/ha':'\u2014');
   setT('r_R', (Rha>0&&sha>0)? f(Rha*sha,2)+' q.li':'\u2014');
   setT('r_Aboth', rawA>0 ? (sha>0 ? f(Aha,2)+' q.li/ha \u00b7 '+f(Aha*sha,2)+' q.li' : (UNITA==='part'?f(rawA,2)+' q.li':f(rawA,2)+' q.li/ha')) : '\u2014');
-  setT('r_Dboth', detrHa>0 ? (f(detrHa,2)+' q.li/ha'+(sha>0?(' \u00b7 '+f(detrHa*sha,2)+' q.li'):'')+(rawD>0?'':' (sugg.)')) : '\u2014');
+  setT('r_Dboth', detrHa>0 ? (f(detrHa,2)+' q.li/ha'+(sha>0?(' \u00b7 '+f(detrHa*sha,2)+' q.li'):'')) : '\u2014');
 
   const db=document.getElementById('detr_box');
   if(detrHa>0 && baseHa>0){
