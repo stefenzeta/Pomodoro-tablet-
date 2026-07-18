@@ -287,7 +287,7 @@ const BANDS=[
 let MODE='s';
 let UNITA='ha';
 let coeffs=BANDS.map(b=>b.cf);
-let letture=[{pl:3,w:0,pm:0,ar:0,anr:0,c:[0,0,0,0,0]}];
+let letture=[{pl:2,w:0,pm:0,ar:0,anr:0,c:[0,0,0,0,0]}];
 function normLetture(){letture.forEach(L=>{if(L.pm==null)L.pm=0;if(L.ar==null)L.ar=0;if(L.anr==null)L.anr=0;if(!Array.isArray(L.c))L.c=[0,0,0,0,0];});}
 const WORKKEY='pomodoro_work_v1', ARCHKEY='pomodoro_arch_v1';
 let LOCTYPE='coord', CURID=null;
@@ -454,7 +454,7 @@ function setW(li,v){letture[li].w=parseFloat((v||'').replace(',','.'))||0;recomp
 function setC(li,i,v){let n=parseInt(v,10);if(isNaN(n)||n<0)n=0;letture[li].c[i]=n;recompute();}
 function lstep(li,i,d){letture[li].c[i]=Math.max(0,letture[li].c[i]+d);if(navigator.vibrate)navigator.vibrate(d>0?18:30);
   const e=document.getElementById('lv'+li+'_'+i);if(e)e.value=letture[li].c[i];recompute();}
-function addLettura(){letture.push({pl:3,w:0,pm:0,ar:0,anr:0,c:[0,0,0,0,0]});renderLetture();recompute();if(navigator.vibrate)navigator.vibrate(25);}
+function addLettura(){letture.push({pl:2,w:0,pm:0,ar:0,anr:0,c:[0,0,0,0,0]});renderLetture();recompute();if(navigator.vibrate)navigator.vibrate(25);}
 function setPm(li,v){letture[li].pm=parseInt(v,10)||0;recompute();}
 function setAr(li,v){letture[li].ar=parseInt(v,10)||0;recompute();}
 function setAnr(li,v){letture[li].anr=parseInt(v,10)||0;recompute();}
@@ -594,7 +594,7 @@ function exportTxt(){
 function resetForm(){
   ['sup','x','y','bpot','peso','assic','detr','loc_lat','loc_lon','loc_foglio','dat_cert','dat_assic','dat_part','dat_periti'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});var _dd2=document.getElementById('dat_data');if(_dd2)_dd2.value=todayISO();
   const kk=document.getElementById('k');if(kk)kk.value='0';
-  coeffs=BANDS.map(b=>b.cf); letture=[{pl:3,w:0,c:[0,0,0,0,0]}];
+  coeffs=BANDS.map(b=>b.cf); letture=[{pl:2,w:0,pm:0,ar:0,anr:0,c:[0,0,0,0,0]}];
   renderCoeff();renderLetture();recompute();
 }
 function resetAll(){
