@@ -174,6 +174,9 @@
     <div class="res"><span class="k">kg/pianta potenziale</span><span class="v" id="r_kgpot">&#8212;</span></div>
     <div class="res blue"><span class="k">Prod. potenziale</span><span class="v" id="r_pot">&#8212;</span></div>
     <div class="res blue"><span class="k">Prod. potenziale / ha</span><span class="v" id="r_potha">&#8212;</span></div>
+    <div class="res"><span class="k">Bacche/pianta da campione</span><span class="v" id="r_bcamp">&#8212;</span></div>
+    <div class="res"><span class="k">Peso medio bacca da campione</span><span class="v" id="r_pmbc">&#8212;</span></div>
+    <div class="note">Se lasci vuoti "Bacche/pianta" e "Peso", uso questi valori dal campione (presenti + assenti risarc. + assenti non risarc.).</div>
   </div>
 
   <div class="box">
@@ -195,7 +198,8 @@
       <div class="f"><label id="lbA">Assicurata (q.li/ha)</label><input id="assic" type="number" inputmode="decimal" oninput="recompute()"></div>
       <div class="f"><label id="lbD">Detrazione (q.li/ha)</label><input id="detr" type="number" inputmode="decimal" oninput="recompute()" placeholder="0"></div>
     </div>
-    <div class="note">Scegli se inserire i dati <b>a partita</b> o <b>a q.li/ha</b>. R = assicurata &#8722; detrazione. Detrazione = quota che giudichi NON in garanzia. Se A vuota uso la potenziale. Con dati a partita serve la superficie.</div>
+    <div class="note">Scegli se inserire i dati <b>a partita</b> o <b>a q.li/ha</b>. R = assicurata &#8722; detrazione. Detrazione = quota che giudichi NON in garanzia. Se lasci vuota la detrazione uso i <b>non risarcibili suggeriti</b> dai campioni; puoi sempre scriverne una tua o confermare l'assicurata. Se A vuota uso la potenziale.</div>
+    <div class="res"><span class="k">Non risarc. suggerito (da assenti)</span><span class="v" id="r_Nsug" style="font-size:15px;white-space:normal;text-align:right">&#8212;</span></div>
     <div class="res blue"><span class="k">Assicurata (A)</span><span class="v" id="r_Aboth" style="font-size:15px;white-space:normal;text-align:right">&#8212;</span></div>
     <div class="res"><span class="k">Detrazione</span><span class="v" id="r_Dboth" style="font-size:15px;white-space:normal;text-align:right">&#8212;</span></div>
     <div class="res green"><span class="k">Risarcibile R / ha</span><span class="v" id="r_Rha">&#8212;</span></div>
@@ -283,7 +287,8 @@ const BANDS=[
 let MODE='s';
 let UNITA='ha';
 let coeffs=BANDS.map(b=>b.cf);
-let letture=[{pl:3,w:0,c:[0,0,0,0,0]}];
+let letture=[{pl:3,w:0,pm:0,ar:0,anr:0,c:[0,0,0,0,0]}];
+function normLetture(){letture.forEach(L=>{if(L.pm==null)L.pm=0;if(L.ar==null)L.ar=0;if(L.anr==null)L.anr=0;if(!Array.isArray(L.c))L.c=[0,0,0,0,0];});}
 const WORKKEY='pomodoro_work_v1', ARCHKEY='pomodoro_arch_v1';
 let LOCTYPE='coord', CURID=null;
 function getCalcState(){const inp={};document.querySelectorAll('input[id]').forEach(e=>inp[e.id]=e.value);
@@ -415,8 +420,10 @@ function renderCoeff(){
 function setCoeff(i,v){coeffs[i]=parseFloat((v||'').replace(',','.'))||0;recompute();}
 
 function renderLetture(){
-  const box=document.getElementById('letture');box.innerHTML='';const pesoPot=nv('peso');
+  normLetture();
+  const box=document.getElementById('letture');box.innerHTML='';
   letture.forEach((L,li)=>{
+    const bandsSum=L.c.reduce((a,b)=>a+b,0);
     const div=document.createElement('div');div.className='lettura';
     let html='<div class="lhead"><span class="t">Campione '+(li+1)+'</span>';
     if(letture.length>1) html+='<button class="rm" onclick="delLettura('+li+')">Rimuovi</button>';
@@ -424,6 +431,13 @@ function renderLetture(){
     html+='<div class="f"><label>Piante esaminate</label><input type="number" inputmode="numeric" value="'+L.pl+'" oninput="setPl('+li+',this.value)"></div>';
     const wval=(L.w&&L.w>0)?L.w:'';
     html+='<div class="f"><label>Peso totale bacche (kg)</label><input type="number" inputmode="decimal" value="'+wval+'" placeholder="kg pesati" oninput="setW('+li+',this.value)"></div></div>';
+    const presVal=(bandsSum>0)?bandsSum:(L.pm||'');
+    html+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:2px">';
+    html+='<div class="f"><label>Presenti (n.)</label><input type="number" inputmode="numeric" value="'+presVal+'" placeholder="0" oninput="setPm('+li+',this.value)"'+(bandsSum>0?' disabled style="background:#efeadd"':'')+'></div>';
+    html+='<div class="f"><label>Assenti risarc.</label><input type="number" inputmode="numeric" value="'+(L.ar||'')+'" placeholder="0" oninput="setAr('+li+',this.value)"></div>';
+    html+='<div class="f"><label>Assenti non risarc.</label><input type="number" inputmode="numeric" value="'+(L.anr||'')+'" placeholder="0" oninput="setAnr('+li+',this.value)"></div>';
+    html+='</div>';
+    html+='<div class="note" style="margin:2px 0 6px">Presenti: a mano (sola quantit\u00e0) oppure compila le classi qualit\u00e0 sotto e le sommo io. Risarc. = evento in garanzia (grandine/vento/pioggia); non risarc. = fuori garanzia (batteriosi ecc.).</div>';
     html+='<div class="note" style="margin:4px 0 6px">Conteggio bacche per classe: opzionale (per bacche/pianta, peso medio bacca e qualit\u00e0).</div>';
     BANDS.forEach((x,i)=>{
       html+='<div class="band"><div class="nm"><b>'+x.l+')</b> '+x.nm+'<span class="cfb" id="lcf'+li+'_'+i+'">'+coeffs[i]+'%</span></div>'+
@@ -440,7 +454,10 @@ function setW(li,v){letture[li].w=parseFloat((v||'').replace(',','.'))||0;recomp
 function setC(li,i,v){let n=parseInt(v,10);if(isNaN(n)||n<0)n=0;letture[li].c[i]=n;recompute();}
 function lstep(li,i,d){letture[li].c[i]=Math.max(0,letture[li].c[i]+d);if(navigator.vibrate)navigator.vibrate(d>0?18:30);
   const e=document.getElementById('lv'+li+'_'+i);if(e)e.value=letture[li].c[i];recompute();}
-function addLettura(){letture.push({pl:3,w:0,c:[0,0,0,0,0]});renderLetture();recompute();if(navigator.vibrate)navigator.vibrate(25);}
+function addLettura(){letture.push({pl:3,w:0,pm:0,ar:0,anr:0,c:[0,0,0,0,0]});renderLetture();recompute();if(navigator.vibrate)navigator.vibrate(25);}
+function setPm(li,v){letture[li].pm=parseInt(v,10)||0;recompute();}
+function setAr(li,v){letture[li].ar=parseInt(v,10)||0;recompute();}
+function setAnr(li,v){letture[li].anr=parseInt(v,10)||0;recompute();}
 function delLettura(li){letture.splice(li,1);renderLetture();recompute();}
 
 function buildLegend(){
@@ -458,45 +475,60 @@ function recompute(){
   if(aha>0&&sha>0)i=aha*sha;
   setT('r_a',i?f(i,0):'\u2014'); setT('r_aha',aha?f(aha,0):'\u2014');
 
-  const bpot=nv('bpot'),peso=nv('peso');
-  const kgpot=bpot*peso, pot=i*kgpot/100, potha=aha*kgpot/100;
-  setT('r_kgpot',kgpot?f(kgpot,3)+' kg':'\u2014');
-  setT('r_pot',(kgpot>0&&i>0)?f(pot,2)+' q.li':'\u2014'); setT('r_potha',(kgpot>0&&aha>0)?f(potha,2)+' q.li/ha':'\u2014');
-
-  let SP=0,Spres=0,SW=0; const qdan=[];
+  // ===== campioni =====
+  let SP=0,Spres=0,SW=0,SAR=0,SANR=0; const qdan=[];
   letture.forEach((L,li)=>{
-    const pres=L.c.reduce((a,b)=>a+b,0);
-    const wt=(L.w>0)?L.w:0;                       // peso TOTALE pesato (kg)
+    const bandsSum=L.c.reduce((a,b)=>a+b,0);
+    const pres = bandsSum>0 ? bandsSum : (L.pm||0);   // presenti: da qualita' se compilata, altrimenti a mano
+    const wt=(L.w>0)?L.w:0;                           // peso TOTALE pesato (kg)
     let sc=0; L.c.forEach((n,j)=>sc+=n*(coeffs[j]||0));
-    const dq=pres>0?sc/pres:0;
-    const kgpp=(L.pl>0&&wt>0)?wt/L.pl:0;          // kg/pianta = peso totale / piante
+    const dq=bandsSum>0?sc/bandsSum:0;
+    const kgpp=(L.pl>0&&wt>0)?wt/L.pl:0;
     const bpp_c=(L.pl>0&&pres>0)?pres/L.pl:0;
     const pmb=(pres>0&&wt>0)?wt/pres:0;
     setT('lkg'+li,kgpp>0?f(kgpp,3):'\u2014'); setT('lbpp'+li,bpp_c>0?f(bpp_c,1):'\u2014');
-    setT('lpb'+li,pmb>0?f(pmb,3):'\u2014'); setT('ldmq'+li,pres>0?f(dq,1)+'%':'\u2014');
+    setT('lpb'+li,pmb>0?f(pmb,3):'\u2014'); setT('ldmq'+li,bandsSum>0?f(dq,1)+'%':'\u2014');
     BANDS.forEach((b,j)=>setT('lcf'+li+'_'+j,(coeffs[j]||0)+'%'));
-    SP+=(L.pl>0?L.pl:0); Spres+=pres; SW+=wt;
-    if(pres>0)qdan.push(dq);
+    SP+=(L.pl>0?L.pl:0); Spres+=pres; SW+=wt; SAR+=(L.ar||0); SANR+=(L.anr||0);
+    if(bandsSum>0)qdan.push(dq);                      // solo i campioni con qualita' entrano nella media qualita'
   });
-  const kgppT=SP>0?SW/SP:0;                        // kg/pianta mediato (dai pesi)
+  const kgppT=SP>0?SW/SP:0;
   const bpp=(SP>0&&Spres>0)?Spres/SP:0;
   const pmbT=(Spres>0&&SW>0)?SW/Spres:0;
+  const bTot=(SP>0)?(Spres+SAR+SANR)/SP:0;            // bacche/pianta totali (potenziale) da campione
+
+  // ===== potenziale (manuale se inserito, altrimenti dal campione) =====
+  const bpotIn=nv('bpot'),pesoIn=nv('peso');
+  const peso=pesoIn>0?pesoIn:pmbT;
+  const bpot=bpotIn>0?bpotIn:bTot;
+  const kgpot=bpot*peso, pot=i*kgpot/100, potha=aha*kgpot/100;
+  setT('r_kgpot',kgpot?f(kgpot,3)+' kg':'\u2014');
+  setT('r_pot',(kgpot>0&&i>0)?f(pot,2)+' q.li':'\u2014'); setT('r_potha',(kgpot>0&&aha>0)?f(potha,2)+' q.li/ha':'\u2014');
+  setT('r_bcamp',bTot>0?f(bTot,1):'\u2014'); setT('r_pmbc',pmbT>0?f(pmbT,3)+' kg':'\u2014');
+
+  // ===== ottenibile (bacche presenti pesate) =====
   const O=i*kgppT/100, Oha=aha*kgppT/100;
   setT('q_n',letture.length); setT('q_pres',Spres); setT('q_bott',bpp>0?f(bpp,2):'\u2014');
   setT('r_bott',bpp>0?f(bpp,2):'\u2014'); setT('r_kgott',kgppT>0?f(kgppT,3)+' kg':'\u2014');
   setT('r_pmb',pmbT>0?f(pmbT,3)+' kg':'\u2014');
   setT('r_ott',(kgppT>0&&i>0)?f(O,2)+' q.li':'\u2014'); setT('r_ottha',(kgppT>0&&aha>0)?f(Oha,2)+' q.li/ha':'\u2014');
 
+  // ===== non risarcibili (assenti non risarc x peso medio) -> suggerimento detrazione =====
+  const anrPP=(SP>0)?SANR/SP:0;
+  const Nha=anrPP*peso*aha/100, Npart=anrPP*peso*i/100;
+  setT('r_Nsug', Nha>0 ? (f(Nha,2)+' q.li/ha'+(sha>0?(' \u00b7 '+f(Npart,2)+' q.li'):'')) : '\u2014');
+
+  // ===== liquidazione =====
   const rawA=nv('assic'), rawD=nv('detr');
-  const Aha    = (UNITA==='part') ? (sha>0?rawA/sha:0) : rawA;   // sempre q.li/ha internamente
-  const detrHa = (UNITA==='part') ? (sha>0?rawD/sha:0) : rawD;
-  const baseHa = Aha>0 ? Aha : potha;            // base per ettaro
+  const Aha    = (UNITA==='part') ? (sha>0?rawA/sha:0) : rawA;
+  const detrManHa = (UNITA==='part') ? (sha>0?rawD/sha:0) : rawD;
+  const detrHa = (rawD>0) ? detrManHa : Nha;         // se non scrivi la detrazione, uso il suggerito dai non risarc.
+  const baseHa = Aha>0 ? Aha : potha;
   const Rha = Math.max(0, baseHa - detrHa);
   setT('r_Rha', Rha>0? f(Rha,2)+' q.li/ha':'\u2014');
   setT('r_R', (Rha>0&&sha>0)? f(Rha*sha,2)+' q.li':'\u2014');
-  // assicurata e detrazione in entrambe le unit\u00e0
   setT('r_Aboth', rawA>0 ? (sha>0 ? f(Aha,2)+' q.li/ha \u00b7 '+f(Aha*sha,2)+' q.li' : (UNITA==='part'?f(rawA,2)+' q.li':f(rawA,2)+' q.li/ha')) : '\u2014');
-  setT('r_Dboth', rawD>0 ? (sha>0 ? f(detrHa,2)+' q.li/ha \u00b7 '+f(detrHa*sha,2)+' q.li' : (UNITA==='part'?f(rawD,2)+' q.li':f(rawD,2)+' q.li/ha')) : '\u2014');
+  setT('r_Dboth', detrHa>0 ? (f(detrHa,2)+' q.li/ha'+(sha>0?(' \u00b7 '+f(detrHa*sha,2)+' q.li'):'')+(rawD>0?'':' (sugg.)')) : '\u2014');
 
   const db=document.getElementById('detr_box');
   if(detrHa>0 && baseHa>0){
@@ -505,7 +537,7 @@ function recompute(){
   } else db.style.display='none';
 
   const dmq=qdan.length>0?qdan.reduce((a,c)=>a+c,0)/qdan.length:0;
-  setT('q_dmq',qdan.length>0?f(dmq,1)+'%':'\u2014'); setT('r_dmq',qdan.length>0?f(dmq,1)+'%':'\u2014'); setT('r_nlett',letture.length);
+  setT('q_dmq',qdan.length>0?f(dmq,1)+'%':'\u2014'); setT('r_dmq',qdan.length>0?f(dmq,1)+'%':'\u2014'); setT('r_nlett',qdan.length);
 
   if(kgppT>0 && Rha>0){
     const aspHa=Math.max(0,Rha-Oha);
